@@ -1,0 +1,16 @@
+{
+  "name": "m0",
+  "private": true,
+  "scripts": {
+    "m0": "ts-node scripts/lifecycle.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@magicblock-labs/ephemeral-rollups-sdk": "0.14.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
