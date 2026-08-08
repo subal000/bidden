@@ -1,0 +1,22 @@
+$ go run . --mode conc --n 400  --senders 12
+conc12-shared          attempted=400 sendOK=400 landed=400
+  send wall     3.423s      LANDED rate   116.9 tx/s      dropped 0
+
+$ go run . --mode conc --n 2000 --senders 24
+conc24-shared          attempted=2000 sendOK=2000 landed=2000
+  send wall     8.753s      LANDED rate   228.5 tx/s      dropped 0
+
+$ go run . --mode conc --n 2000 --senders 96
+conc96-shared          attempted=2000 sendOK=2000 landed=2000
+  send wall     2.597s      LANDED rate   770.2 tx/s      dropped 0
+
+$ go run . --mode conc --n 4000 --senders 96
+conc96-shared          attempted=4000 sendOK=4000 landed=4000
+  send wall     5.275s      LANDED rate   758.3 tx/s      dropped 0
+
+ER block rate sampled during the 4000 tx run:
+  +47 blocks in 2s = 23 blocks/s
+  +47 blocks in 2s = 23 blocks/s
+  +48 blocks in 2s = 24 blocks/s
+  +46 blocks in 2s = 23 blocks/s
+Identical to the idle rate. ~43ms per block, ~33 transactions per block.

@@ -1,0 +1,15 @@
+$ go run . --mode ws --n 200 --senders 6 --jitter-min 50ms --jitter-max 100ms
+  counter moved      6405 -> 6605  (200 increments landed)
+  tx landed rate     31.1 tx/s
+  distinct values    200 delivered by websocket
+  delivery ratio     100.0%
+  skipped runs       0 (largest jump 0)
+  VERDICT            lossless, every intermediate value delivered
+
+$ go run . --mode ws --n 2000 --senders 96
+  counter moved      6605 -> 8605  (2000 increments landed)
+  tx landed rate     724.1 tx/s
+  distinct values    1864 delivered by websocket
+  delivery ratio     93.2%
+  skipped runs       33 (largest jump 25)
+  VERDICT            COALESCING, 136 of 2000 intermediate values never arrived

@@ -1,0 +1,16 @@
+$ go run . --mode blockhash
+
+cached blockhash      CvSswJ46R6SQWgJ1XC4TMb7JnxsX32jp3wJiwVzFS47Z
+blockHeight at fetch  521264067
+slot at fetch         521264069
+lastValidBlockHeight  521265265  (window = 1198 blocks)
+
+after 2s: blockHeight 521264110 (+43, 22 blocks/s), slot 521264112 (+43, 22 slots/s)
+
+AGE      RESULT   COUNTER   DETAIL
+1.2s     LAND     0->1      sig mVVeXLYsQjBvon2RBHws
+5.2s     LAND     1->2      sig 47kZBJN1WH5MENnKXPot
+15.2s    LAND     2->3      sig 4PSVFAxXFqExXKZXFseu
+30.2s    LAND     3->4      sig 61g1sv26xNxFKc1cLgbJ
+45.2s    LAND     4->5      sig 5L9xQDuoubBNQeeZHXzN
+1m0.2s   REJECT   -         rpc -32003: transaction verification error: Blockhash not found

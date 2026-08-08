@@ -1,0 +1,24 @@
+$ npx ts-node scripts/lifecycle.ts       (Milestone 0, first run, no retries)
+
+[1/6] initialize counter on L1
+    ok  count on L1 = 0 (owner BseL5WXo2AZY5kqqhLbsmnH7FnXFFiKfMiNDAcojjmEJ)
+[2/6] delegate counter into the ER
+    ok  counter now owned by DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh on L1
+    ok  counter live in ER, count = 0
+[3/6] increment 100 times against the ER
+    ok  100 ER transactions in 28293ms (282.9ms avg)
+[4/6] read counter in the ER
+    ok  count in ER = 100
+    ok  count on L1 is still 0 (not yet committed)
+[5/6] commit + undelegate back to L1
+    ok  undelegate sig (ER) 3FJQY7fxbSDS3ywh1U6tv1jE7kDUXBGiaUj6PDm944dV...
+[6/6] verify final state on L1
+    ok  counter back on L1, owner BseL5WXo2AZY..., count = 100
+
+MILESTONE 0 PASSED  (100 ER txs, final L1 value 100)
+
+Independent verification, not via the script:
+$ solana account Foo2tpFY3zhbpJSJsRA5eDuZGVh2z7xfANW5VD9HKKdd --url devnet
+  Owner: BseL5WXo2AZY5kqqhLbsmnH7FnXFFiKfMiNDAcojjmEJ
+  0000:   ff b0 04 f5  bc fd 7c 19  64 00 00 00  00 00 00 00
+                                    ^^ 0x64 = 100

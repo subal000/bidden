@@ -1,0 +1,25 @@
+$ go run . --mode seq-confirm --n 200 --er https://api.devnet.solana.com --poll 400ms
+seq-confirm            attempted=200 sendOK=16 landed=16
+  send wall  31.084s   LANDED rate 0.5 tx/s
+  send errors:  rate-limited  184
+
+$ go run . --mode seq-fire --n 200 --er https://api.devnet.solana.com
+seq-fire               attempted=200 sendOK=20 landed=20
+  send wall  24.475s   LANDED rate 0.8 tx/s
+  send errors:  rate-limited  180
+
+$ go run . --mode conc --n 200 --senders 6 --jitter-min 50ms --jitter-max 100ms \
+      --er https://api.devnet.solana.com
+conc6-shared-jitter50ms-100ms attempted=200 sendOK=3 landed=3
+  send wall  6.047s    LANDED rate 0.5 tx/s
+  send errors:  rate-limited  197
+
+Concurrency makes L1 worse, not better.
+
+Paced under the rate limit, to separate the limiter from the chain:
+$ go run . --mode seq-confirm --n 20 --er https://api.devnet.solana.com \
+      --poll 40ms --jitter-min 900ms --jitter-max 1300ms
+seq-confirm            attempted=20 sendOK=20 landed=20
+  confirm latency  min 181ms  median 498ms  max 721ms  (n=20)
+
+L1 never dropped anything it accepted, in any run.

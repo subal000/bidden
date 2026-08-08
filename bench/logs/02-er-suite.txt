@@ -1,0 +1,26 @@
+$ go run . --mode suite --n 200 --multi
+
+====================================================================================
+RESULTS  (n=200 per run, landed verified by reading the counter)
+====================================================================================
+CONFIG                          SEND WALL    SENT  LANDED  DROPPED  LANDED tx/s
+1 seq-confirm                     48.186s     200     200        0          4.2
+2 seq-fire                        24.543s     200     200        0          8.1
+3 conc6-fire (shared PDA)          4.058s     200     200        0         49.3
+4 conc6-jitter (shared PDA)        7.607s     200     200        0         26.3
+3b conc6-fire (6 keypairs)         4.094s     200     200        0         48.9
+4b conc6-jitter (6 keypairs)        6.76s     200     200        0         29.6
+
+demo requirement: 500 tx in 30s = 16.7 tx/s
+  1 seq-confirm                  MISS
+  2 seq-fire                     MISS
+  3 conc6-fire (shared PDA)      CLEARS (1478 tx in 30s)
+  4 conc6-jitter (shared PDA)    CLEARS (789 tx in 30s)
+  3b conc6-fire (6 keypairs)     CLEARS (1466 tx in 30s)
+  4b conc6-jitter (6 keypairs)   CLEARS (888 tx in 30s)
+
+Separate runs of the same configurations, showing run-to-run variance:
+  seq-fire            200/200   12.1 tx/s
+  conc6-fire          200/200   70.6 tx/s
+  conc6-jitter        200/200   38.3 tx/s
+  conc6-multi         200/200   54.7 tx/s

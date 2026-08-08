@@ -1,0 +1,40 @@
+{
+  "counterPda": "Foo2tpFY3zhbpJSJsRA5eDuZGVh2z7xfANW5VD9HKKdd",
+  "owner": "BseL5WXo2AZY5kqqhLbsmnH7FnXFFiKfMiNDAcojjmEJ",
+  "finalCommittedCount": 13524,
+  "totalL1Transactions": 125,
+  "firstL1": "2026-08-07T12:45:12",
+  "lastL1": "2026-08-07T18:57:55",
+  "lifecycle": [
+    {
+      "time": "2026-08-07T12:45:12",
+      "signature": "4z4SAu5uQpCJX9KYfonC7cZjHyhKTht6qoGAWV8HTWpBY9tRLQi3RmSCxumtRwtMTjrYxFAbnZeqvzuRNFgFADp8",
+      "instruction": "Initialize"
+    },
+    {
+      "time": "2026-08-07T12:45:14",
+      "signature": "3ar1DAAjzTUjBokkqBvn15saLphPqcBpvUuYq8d8cqs6ai87sNchcptmTzC6Mow5kXWhfmkMmFpWjcdThvW3pwf4",
+      "instruction": "Delegate"
+    },
+    {
+      "time": "2026-08-07T12:45:45",
+      "signature": "3Xqxsz989EFoNmeeU4AVXCaDxNfoq6NL1q8oWrEeqriB3ry4BvvtsaCMhempnkWCZsZ42HdzJP3m4o9kQguC9hSA",
+      "instruction": "ProcessUndelegation"
+    },
+    {
+      "time": "2026-08-07T13:14:56",
+      "signature": "H3vQwsFtFr24BLmLW9NusGYaErzsHPf8EYbHVqRXagG3CqxioJMgYz94Pd4dV5qfDySUFJg51SuygWhgw6FVdoe",
+      "instruction": "Initialize"
+    },
+    {
+      "time": "2026-08-07T13:14:59",
+      "signature": "639cgzPDHU2KL1pV1pMTPcSbDGBe8R7kwYepMykHWhDD91iUnYM7wNKmn43KCnPhrLb26kuaVES7Zhf1RGpHxYJU",
+      "instruction": "Delegate"
+    },
+    {
+      "time": "2026-08-07T18:51:10",
+      "signature": "GS4o44MYKRVH1XdLk2nwEp3dmK26HWKmjA3WSqTuDEjLKmE8Biim8jZwqLMwk9gvH29UUtsfcsok5J74oWAP1XT",
+      "instruction": "ProcessUndelegation"
+    }
+  ]
+}
