@@ -196,14 +196,24 @@ recording.
 
 Nine shots, five windows, two arrow presses. Rehearse the switches once without recording.
 
-## Slides
+## The deck
 
-Open `localhost:3000/slides`, press `F` for full screen. Arrow keys advance.
-`?s=2` jumps straight to a slide, so you can restart a take mid-way.
+`localhost:3000/slides`, `F` for full screen, arrows advance, `?s=N` deep-links a slide.
 
-1. **Agents have to negotiate** — the problem
-2. **Negotiation moves. Money does not.** — L1 vs rollup split
-3. **bidden** — tagline, headline numbers, repo
+| # | Slide | Used at |
+|---|---|---|
+| 1 | **bidden** — title | optional cold open |
+| 2 | **Agents can't haggle onchain** — the problem | 0:12 |
+| 3 | **A live reverse auction, settled on Solana** — the product | 0:34 |
+| 4 | **Negotiation moves. Money does not.** — why MagicBlock | 0:50 |
+| 5 | **We measured it instead of assuming it** — the proof | skip in video, `/benchmark` is better |
+| 6 | **Demo** — divider | 1:06, hold 2s then cut to the app |
+| 7 | **The auction is the product, not the agents** — where it scales | 1:52 |
+| 8 | **Sell the mechanism before the marketplace** — business model | 2:10 |
+| 9 | **bidden** — close | 2:28 |
+
+Slide 5 duplicates the `/benchmark` page. Use the real page in the video; the slide exists
+so the deck stands alone if you ever present it without a screen share.
 
 ## Before export
 
