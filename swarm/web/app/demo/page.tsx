@@ -40,7 +40,7 @@ export default function Demo() {
   const [runId, setRunId] = useState(0);
   const [, force] = useState(0);
   const [open, setOpen] = useState<string | null>(null);
-  const [run, setRun] = useState<RunState | null>(null);
+  const [run, setRun] = useState<(RunState & { canRun?: boolean }) | null>(null);
   const [starting, setStarting] = useState(false);
   const [runError, setRunError] = useState<string | null>(null);
 
@@ -114,6 +114,10 @@ export default function Demo() {
   const floors = curve.agents.map((a) => effectiveFloor(a, curve.reputationDiscount));
   const floor = Math.min(...floors);
 
+  // A hosted deploy has no Go toolchain or keypairs, so it can read the chain
+  // but cannot drive an auction. Show that rather than offering a button that
+  // fails with spawn ENOENT.
+  const canRun = run?.canRun !== false;
   const busy = run?.phase != null && run.phase !== "idle" && run.phase !== "done" && run.phase !== "error";
   // A page opened after a run has no session data, so live widgets would render
   // empty against a large counter and read as broken rather than complete.
@@ -140,14 +144,26 @@ export default function Demo() {
           >
             {LIVE ? "live · devnet" : "mock"}
           </span>
-          <Button
-            onClick={start}
-            loading={starting || busy}
-            disabled={busy}
-            icon={run?.phase === "done" ? <RotateCcw className="h-3.5 w-3.5" aria-hidden /> : <Play className="h-3.5 w-3.5" aria-hidden />}
-          >
-            {busy ? "Auction running" : run?.phase === "done" ? "Run again" : "Run job"}
-          </Button>
+          {canRun ? (
+            <Button
+              onClick={start}
+              loading={starting || busy}
+              disabled={busy}
+              icon={
+                run?.phase === "done" ? (
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden />
+                ) : (
+                  <Play className="h-3.5 w-3.5" aria-hidden />
+                )
+              }
+            >
+              {busy ? "Auction running" : run?.phase === "done" ? "Run again" : "Run job"}
+            </Button>
+          ) : (
+            <span className="rounded-md border border-edge px-3 py-2 text-[11px] text-dim">
+              Auctions are driven locally
+            </span>
+          )}
         </div>
       </div>
 
@@ -257,6 +273,13 @@ export default function Demo() {
         <aside aria-label="Settlement" className="flex min-w-0 flex-col gap-4">
           <div className="rounded-lg border border-edge bg-panel p-4">
             <h2 className="text-[10px] uppercase tracking-[0.16em] text-dim">Lifecycle</h2>
+            {!canRun && (
+              <p className="mt-2 text-[11px] leading-relaxed text-dim">
+                This page reads the auction live from the rollup. Starting one needs the Go
+                driver and funded keypairs, so it runs from a developer machine — when it
+                does, the numbers here move in real time.
+              </p>
+            )}
             <div className="mt-3">
               {run ? (
                 <Timeline state={run} />

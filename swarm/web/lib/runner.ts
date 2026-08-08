@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { existsSync } from "fs";
 import path from "path";
 
 export type Phase =
@@ -69,6 +70,19 @@ export function getState(): RunState {
   return store.state;
 }
 
+/**
+ * Whether this host can actually drive an auction.
+ *
+ * Running one spawns the Go driver and agents and needs the funded keypairs, so
+ * it only works on a developer machine. NEXT_PUBLIC_LIVE is a separate concern:
+ * it selects live chain data for reading, which works fine on a hosted deploy.
+ * Conflating the two produced `spawn go ENOENT` in production.
+ */
+export function canRun(): boolean {
+  if (process.env.VERCEL) return false;
+  return existsSync(path.join(DRIVER, "main.go"));
+}
+
 function mark(key: Phase, status: "active" | "done" | "failed", detail?: string, sig?: string) {
   const idx = STEPS.findIndex((s) => s.key === key);
   if (idx < 0) return;
@@ -113,7 +127,15 @@ function run(cmd: string, args: string[], cwd: string): Promise<string> {
     p.stdout.on("data", push);
     p.stderr.on("data", push);
     p.on("close", (code) => (code === 0 ? resolve(out) : reject(new Error(out.slice(-400)))));
-    p.on("error", reject);
+    p.on("error", (e: NodeJS.ErrnoException) =>
+      reject(
+        e.code === "ENOENT"
+          ? new Error(
+              "the Go toolchain is not available on this host, so an auction cannot be driven from here",
+            )
+          : e,
+      ),
+    );
   });
 }
 

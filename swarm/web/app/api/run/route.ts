@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { getState, startRun } from "@/lib/runner";
+import { canRun, getState, startRun } from "@/lib/runner";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json(getState());
+  return NextResponse.json({ ...getState(), canRun: canRun() });
 }
 
 export async function POST(req: Request) {
   // The runner spawns the Go driver and agents, which do not exist on a hosted
   // deploy. Fail with something actionable rather than a spawn ENOENT.
-  if (process.env.NEXT_PUBLIC_LIVE !== "true") {
+  if (!canRun()) {
     return NextResponse.json(
       {
         error:
