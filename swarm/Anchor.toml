@@ -1,0 +1,19 @@
+skip_local_validator = true
+
+[toolchain]
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+swarm = "BjMyKMPtFoWk7wXdSh4iz421H8PFWV1LbWcsJPKCzrhb"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/swarm-deployer.json"
+
+[scripts]
+test = "cargo test"
+
+[hooks]
