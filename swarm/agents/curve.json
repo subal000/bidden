@@ -1,0 +1,60 @@
+{
+  "_comment": "Demo tuning. Mirrored in web/lib/curve.json so the mocked frontend and the Go agents converge identically. Bids are basis points of the escrow budget; 10000 is the full budget. sendLatencyMs models the measured 82ms ER send round trip so the simulation runs at the real rate.",
+  "startBps": 10000,
+  "durationSeconds": 30,
+  "jitterMinMs": 50,
+  "jitterMaxMs": 100,
+  "tickNoise": 0.55,
+  "reputationDiscount": 0.18,
+  "agents": [
+    {
+      "name": "atlas",
+      "specialization": "render",
+      "floorBps": 6200,
+      "reputation": 8200,
+      "decay": 0.016,
+      "aggression": 0.3
+    },
+    {
+      "name": "borealis",
+      "specialization": "transcode",
+      "floorBps": 5900,
+      "reputation": 6400,
+      "decay": 0.02,
+      "aggression": 0.34
+    },
+    {
+      "name": "cirrus",
+      "specialization": "render",
+      "floorBps": 6600,
+      "reputation": 7100,
+      "decay": 0.013,
+      "aggression": 0.22
+    },
+    {
+      "name": "dorado",
+      "specialization": "captioning",
+      "floorBps": 5600,
+      "reputation": 4300,
+      "decay": 0.024,
+      "aggression": 0.38
+    },
+    {
+      "name": "echo",
+      "specialization": "transcode",
+      "floorBps": 6900,
+      "reputation": 9100,
+      "decay": 0.01,
+      "aggression": 0.18
+    },
+    {
+      "name": "fenrir",
+      "specialization": "captioning",
+      "floorBps": 6350,
+      "reputation": 5200,
+      "decay": 0.021,
+      "aggression": 0.32
+    }
+  ],
+  "sendLatencyMs": 82
+}
