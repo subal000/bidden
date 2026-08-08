@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ring: #4ade80;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: #07090d;
+  color: #e6edf6;
+  font-feature-settings: "tnum" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus ring uses the brand accent, never the browser default. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes sendPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(74,222,128,0); }
+}
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.pulse   { animation: sendPulse 420ms cubic-bezier(0, 0, 0.2, 1); }
+.row-in  { animation: rowIn 150ms cubic-bezier(0, 0, 0.2, 1); }
+.fade-up { animation: fadeUp 300ms cubic-bezier(0, 0, 0.2, 1) both; }
+
+/* Skeletons match content shape; the sweep tells you it is loading, not stuck. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #141a24;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(159,176,198,0.07), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+/* Reduced motion removes motion entirely rather than shortening it. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .skeleton::after { animation: none; }
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1c2431; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2a3546; }
