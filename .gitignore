@@ -22,6 +22,11 @@ id.json
 .env.*
 !.env.example
 
+# Compiled Go binaries (same name as their directory)
+bench/bench
+swarm/driver/driver
+swarm/agents/agents
+
 # Local run state
 .swarm-job-id
 .swarm-undelegate-at
