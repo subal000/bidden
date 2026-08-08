@@ -1,161 +1,152 @@
-# swarm — 90 second demo video
+# Bidden — pitch + demo video
+
+One video, both jobs. Target **2:15**. Hard ceiling 2:30.
 
 ## Number discipline
 
-Two marker types. Nothing ships with a marker still in it.
+- `[LIVE: ...]` — read off the take you actually record. **Nothing from the mock fills one.**
+- `[MEASURED: ...]` — from the benchmark harness, already known, safe to pre-fill. Must be
+  spoken as benchmark measurement, not as this run.
 
-- `[LIVE: ...]` — must be filled from the recorded run in Phase 5. **Nothing from the mock
-  may ever fill one of these.**
-- `[MEASURED: ...]` — from the M1 benchmark harness against the M0 counter program on
-  devnet. Already known, safe to pre-fill, but must be described as benchmark measurement
-  and not as this run.
+**Never say 1ms.** Measured ER block rate is 22-23 blocks/s, about 43ms.
 
-Never claim 1ms block time. Measured ER block rate is 22-23 blocks/s, about 43ms.
+**Never say rollup transactions are on the explorer.** They are not. Only the L1 side is.
 
 ---
 
 ## Shot list
 
-| # | Time | Visual | On-screen text |
+| # | Time | On screen | Caption |
 |---|---|---|---|
-| 1 | 0:00-0:15 | Full frontend, mid-run. Counter climbing, curve descending, cards pulsing. No cursor, no chrome. | none |
-| 2 | 0:15-0:30 | Slow zoom to the six agent cards. Bids visibly differ, winner badge moves between them. | `6 agents · own keypair · own cost curve` |
-| 3 | 0:30-0:42 | Cut to terminal. `bench --mode suite` output, ER vs L1 table. Highlight the `3/200` row. | `same program · same machine · one endpoint swap` |
-| 4 | 0:42-0:55 | Back to frontend. Convergence curve completing, status flips to Awarded. | `escrow never left Solana L1` |
-| 5 | 0:55-1:08 | The undelegate gap. **Two variants below.** | `committing to Solana L1` |
-| 6 | 1:08-1:20 | Solana explorer, the settle transaction. Escrow drained, winner balance up, Job status Settled. | `one L1 signature` |
-| 7 | 1:20-1:30 | Frontend final frame: counter at final value beside the explorer link. Hold 3s. | `[LIVE: final bid count] bids · 1 settlement` |
+| 1 | 0:00-0:12 | `/demo` mid-auction. Counter climbing, curve falling, cards pulsing. No cursor. | none |
+| 2 | 0:12-0:32 | `/` overview, slow scroll past the hero | none |
+| 3 | 0:32-0:50 | Agent cards, one expanded showing floor and reputation | `6 agents · own keypair · own cost floor` |
+| 4 | 0:50-1:20 | Press Run job. Full auction, counter 0 to [LIVE: N] | `escrow never leaves Solana L1` |
+| 5 | 1:20-1:45 | `/benchmark`, the 3/200 vs 200/200 table | `same program · same machine · one endpoint` |
+| 6 | 1:45-2:05 | Commit, hard cut, then Solana Explorer on the settle tx | `⏱ 20s later` |
+| 7 | 2:05-2:20 | Final frame: result panel beside the explorer. Hold 3s. | `[LIVE: N] bids · 1 settlement` |
 
 ---
 
 ## Narration
 
-**Shot 1 — 0:00 to 0:15. The hook. No setup, no preamble.**
+Read at a normal pace. Roughly 340 words, which is about 2:15.
 
-> Six autonomous agents are bidding against each other for a job, right now.
-> Every one of these is a real Solana transaction.
-> [LIVE: N] of them in the last ten seconds.
+**Shot 1 — the hook. No setup, no logo, no "hi I'm".**
+
+> Six autonomous agents are bidding against each other for a job. Right now, on Solana.
+>
+> Every one of these is a real transaction. [LIVE: N] of them in the last ten seconds.
 >
 > On Solana L1, that same negotiation lands three transactions out of two hundred.
 
-That last line is the whole pitch and it arrives at 12 seconds. Everything after is
+That last line is the whole pitch and it arrives at twelve seconds. Everything after is
 evidence.
 
-**Shot 2 — 0:15 to 0:30. What you are watching.**
+**Shot 2 — the problem. This is the pitch half.**
 
-> Each agent has its own keypair, its own cost curve, and its own idea of what this job is
-> worth. They undercut each other, hold when they are winning, and drop out when the price
-> goes below their floor.
+> Agents that work together have to negotiate. Price, terms, who does what.
 >
-> The price converges over thirty seconds because that is what a market looks like. Nobody
-> is scripting this.
+> For that to be trustworthy it has to happen onchain, where anyone can verify it.
+>
+> But negotiation is chatty. Hundreds of messages in seconds. At four hundred millisecond
+> slots with a fee per message, that is economically dead on a base layer.
+>
+> So today agents either do not negotiate at all, or they do it off-chain and ask you to
+> trust the result.
 
-**Shot 3 — 0:30 to 0:42. The technical core. Give it the screen time.**
+**Shot 3 — what it is.**
 
-> This is the same program, on the same machine, with one endpoint changed.
+> This is Bidden.
+>
+> A job is posted with escrow. Six agents are summoned to it. Each has its own keypair, its
+> own cost floor, its own idea of what the work is worth.
+>
+> They undercut each other for thirty seconds. The lowest bid wins.
+
+**Shot 4 — the demo. Press Run job here.**
+
+> Here is one auction, start to finish.
+>
+> The job and the six agent registries delegate into a MagicBlock Ephemeral Rollup. That is
+> where bidding happens. Blocks land in about forty three milliseconds, and transactions
+> cost nothing.
+>
+> The escrow is never delegated. It sits on Solana the entire time. If the rollup vanished
+> mid-auction, the money would be exactly where it started.
+>
+> [LIVE: N] bids in thirty seconds. Watch the price fall.
+
+**Shot 5 — the measurement. Your strongest technical content. Do not rush it.**
+
+> I measured why this needs a rollup, instead of assuming it.
+>
+> Same program. Same machine. One endpoint changed.
 >
 > Against Solana devnet, six concurrent bidders land three transactions out of two hundred.
-> Concurrency actively hurts, because the burst trips the RPC rate limiter.
+> Concurrency actively hurts, because the burst trips the rate limiter.
 >
-> Inside the Ephemeral Rollup, the identical configuration lands two hundred out of two
-> hundred, at [MEASURED: 26-38] per second. Zero failures, zero fees.
+> Inside the rollup, the identical configuration lands two hundred out of two hundred. I
+> pushed the harness to [MEASURED: 758] transactions per second before I stopped looking for
+> the ceiling.
+
+Optional, if pacing allows. Worth saying because it is checkable:
+
+> Those numbers come from a counter program I deployed and then closed to fund this one.
+> Thirteen thousand four hundred and five landed transactions, zero failures.
+
+**Shot 6 — settlement. Cut here.**
+
+> Bidding closes, and the rollup schedules a commit back to Solana. That part is
+> asynchronous and takes about twenty seconds.
+
+`[HARD CUT]` to the explorer, caption `⏱ 20s later` bottom left for two seconds.
+
+> And here it lands. One transaction on Solana. The escrow pays the winning agent directly:
+> [LIVE: payout] SOL to the agent that bid [LIVE: bid] percent.
+
+**Shot 7 — close.**
+
+> Agents cannot afford to negotiate on a base layer. Inside an Ephemeral Rollup it costs
+> nothing, so they can argue for as long as they need to.
 >
-> I pushed the harness to [MEASURED: 758] transactions per second before I stopped looking
-> for the ceiling.
+> Agents are bidden. Then they bid.
 
-Optional, if the pacing allows, and worth saying because a judge will check:
-
-> Those benchmark numbers come from a counter program I deployed to devnet and then closed
-> to fund this deploy. Thirteen thousand four hundred and five landed transactions, zero
-> failures, across two milestones.
-
-Do **not** append "the signatures are still on the explorer". Rollup transactions are not on
-any public explorer, so that would be false. If you want to point at something clickable,
-point at the L1 side instead:
-
-> The delegate and commit back to Solana are on the explorer. The rollup throughput is my
-> measurement, and the harness is in the repo.
-
-**Shot 4 — 0:42 to 0:55. Why this is not a sidechain toy.**
-
-> The negotiation is fast and free because it happens off L1. The money never does.
->
-> The escrow account is never delegated. It sits on Solana for the entire auction. Only the
-> job and the agent registries move into the rollup, and only for the thirty seconds the
-> bidding takes.
-
-**Shot 5 — 0:55 to 1:08. The commit.**
-
-**MEASURED: the undelegate-to-L1 gap is 20 seconds.** (19.973s on job 5, all seven
-accounts flipping at once, zero read failures.) That is 22% of a 90 second video, so
-**Variant B is the one you use.** Variant A is kept only in case a future run is far
-faster; do not hold 20 seconds of a stalled screen.
-
-*Variant A — ONLY if a future run measures under about 4 seconds. Hold, do not cut.*
-
-> Bidding closes. The rollup schedules a commit back to Solana.
->
-> This part is asynchronous. The rollup registers the intent, and the validator executes
-> the write on L1 a few seconds later. There is no synchronous path, so the client polls
-> until ownership of all seven accounts returns to the program.
-
-On screen: the `poll` output ticking `3/7 → 7/7`, counter frozen at its final value.
-The polling output is the visual. It fills the gap honestly.
-
-*Variant B — USE THIS. Measured gap 20s. Cut.*
-
-Hard cut from "schedules a commit back to Solana" straight to the explorer in shot 6, with
-a caption `⏱ 20s later` bottom-left for two seconds.
-
-> Bidding closes, and the rollup schedules a commit back to Solana. That settlement is
-> asynchronous and takes about twenty seconds, so here is where it lands.
-
-Saying the number out loud is what makes the cut honest. It also happens to be a real
-property of the system worth stating: the rollup is fast, committing back to L1 is not,
-and pretending otherwise is the kind of thing a MagicBlock engineer would catch instantly.
-
-Do not pretend the gap is not there. The caption is what keeps the cut honest.
-
-**Shot 6 — 1:08 to 1:20. The payoff.**
-
-> One transaction on Solana. The escrow pays the winning agent directly, the job is marked
-> settled, and the winner's reputation account records what it earned.
->
-> [LIVE: N] bids inside the rollup. One signature on L1.
-
-**Shot 7 — 1:20 to 1:30. Close.**
-
-> Agents cannot afford to negotiate on L1. Four hundred millisecond slots and a fee per
-> message make it economically dead.
->
-> Inside an Ephemeral Rollup it costs nothing, so they can argue as long as they need to.
-> That is the whole project.
-
-Hold the final frame for three full seconds. The counter beside the single signature is the
-image the judge should be left with.
+Hold the final frame three full seconds.
 
 ---
 
-## Fill-in checklist before export
+## Recording
 
-- [ ] `[LIVE: N]` in shot 1 narration — bids in the first ten seconds of the recorded run
-- [ ] `[LIVE: N]` in shot 6 and 7 — final `Job.bid_count` from the recorded run
-- [x] shot 5 gap — MEASURED at 20s (19.973s). Variant B, caption reads `⏱ 20s later`
-- [ ] `[LIVE: final bid count]` in shot 7 on-screen text
-- [ ] `[MEASURED: ...]` values match the numbers in CLAUDE.md
-- [ ] Badge reads **live** in every frontend shot
-- [ ] Explorer link resolves and the Job account still exists
+Use **localhost**, not the deployed site. Only localhost can drive a real auction.
+
+```bash
+cd swarm/web && npm run dev     # .env.local already sets NEXT_PUBLIC_LIVE=true
+```
+
+- Do one throwaway run before recording. It settles the previous job and confirms devnet is
+  healthy. You do not want to find a flaky RPC on take three.
+- Hide the bookmarks bar, close other tabs, full screen. `Cmd+Shift+5`, record a selection
+  so the dock stays out.
+- For the first ~8 seconds after pressing Run job the page still shows the previous
+  auction while Prepare runs. Start recording once the counter resets to zero, or trim it.
+- Record the auction first, while devnet is behaving. The benchmark and explorer shots do
+  not depend on a good run and can be captured any time.
+- Each run costs about 0.023 SOL. At 3.2 SOL you have roughly 140 takes.
+
+## Before export
+
+- [ ] `[LIVE: N]` shot 1 — bids in the first ten seconds
+- [ ] `[LIVE: N]` shots 4, 7 — final bid count
+- [ ] `[LIVE: payout]` and `[LIVE: bid]` shot 6 — from the result panel
+- [ ] Badge reads **live · devnet** in every frontend shot
 - [ ] No frame contains the word `mock`
+- [ ] Settlement link opens and resolves on Solana Explorer
+- [ ] Nothing claims 1ms blocks
+- [ ] Nothing claims rollup transactions are on the explorer
 
----
+## If devnet degrades mid-recording
 
-## Recording notes
-
-- One desktop resolution, 1680x1050. The layout is fixed and nothing scrolls.
-- Hide the cursor during shots 1, 2, 4, 7.
-- The convergence curve is the most watchable element. Do not cut away from it during
-  its steep phase, roughly the first eight seconds of a run.
-- If devnet degrades mid-recording, stop. Do not finish the take with the mock and
-  reconcile later. Set `LIVE = false`, and if the final video uses the simulation then the
-  narration in shot 1 changes to "this is a local simulation of the deployed program" and
-  the benchmark section carries the weight. See the fallback closing in SUBMISSION.md.
+Stop the take. Do not finish with the mock and reconcile later. If the final video has to
+use the simulation, shot 1 changes to "this is a local simulation of the deployed program"
+and the benchmark section carries the weight.
