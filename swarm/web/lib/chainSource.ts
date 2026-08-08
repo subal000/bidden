@@ -89,7 +89,13 @@ function toBase58(bytes: Uint8Array): string {
 
 export type Deployment = {
   erRpc: string;
+  /** Public endpoint: read from the visitor's browser, so it carries no key. */
+  l1Rpc: string;
+  budgetLamports: number;
   jobPda: string;
+  escrowPda: string;
+  requester: string;
+  jobId: number;
   agents: { name: string; authority: string; pda: string }[];
 };
 
@@ -105,6 +111,7 @@ export class ChainSource implements JobSource {
   private keys: string[];
   private uid = 0;
   private baseline: number | null = null;
+  private recovering = false;
   // AgentRegistry.bid_count is lifetime across every job the agent has ever bid
   // on. The cards must show this job's share, or they sum to more than the job
   // counter and the screen contradicts itself.
@@ -183,6 +190,7 @@ export class ChainSource implements JobSource {
         }
 
         if (this.baseline === null) this.baseline = next.bidCount;
+        if (next.status === "Settled") void this.recoverSettlement();
         this.job = next;
         this.history.push({ t: this.elapsedMs() / 1000, bps: next.bestBidBps });
         this.emit();
@@ -198,6 +206,33 @@ export class ChainSource implements JobSource {
   stop() {
     if (this.timer) clearInterval(this.timer);
     this.timer = null;
+  }
+
+  /**
+   * A visitor arriving after a run has no orchestrator state, so the settlement
+   * signature is recovered from the chain: the most recent L1 transaction
+   * touching the Job is the settle. One call, only once, never polled.
+   */
+  private async recoverSettlement() {
+    if (this.settled || this.recovering) return;
+    this.recovering = true;
+    try {
+      const res = await fetch(this.dep.l1Rpc, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "getSignaturesForAddress",
+          params: [this.dep.jobPda, { limit: 1 }],
+        }),
+      });
+      const json = await res.json();
+      const sig = json?.result?.[0]?.signature;
+      if (sig && !json.result[0].err) this.setSettlement(sig);
+    } catch {
+      // Best effort. The rest of the result panel still renders.
+    }
   }
 
   /** Called once the L1 settle transaction lands, to close the demo. */

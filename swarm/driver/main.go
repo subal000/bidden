@@ -861,6 +861,8 @@ func (d *Driver) addresses() {
 		JobID     uint64      `json:"jobId"`
 		ProgramID string      `json:"programId"`
 		ErRpc     string      `json:"erRpc"`
+		L1Rpc     string      `json:"l1Rpc"`
+		Budget    uint64      `json:"budgetLamports"`
 		Requester string      `json:"requester"`
 		JobPda    string      `json:"jobPda"`
 		EscrowPda string      `json:"escrowPda"`
@@ -869,6 +871,10 @@ func (d *Driver) addresses() {
 		JobID:     d.jobID,
 		ProgramID: programID.String(),
 		ErRpc:     *fER,
+		// Public endpoint on purpose: this is read from a visitor's browser and
+		// must not carry our key.
+		L1Rpc:  "https://api.devnet.solana.com",
+		Budget: *fBudget,
 		Requester: d.wallet.PublicKey().String(),
 		JobPda:    job.String(),
 		EscrowPda: escrowPDA(job).String(),

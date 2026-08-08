@@ -10,6 +10,7 @@ import { AgentCard } from "@/components/AgentCard";
 import { BidLog } from "@/components/BidLog";
 import { ConvergenceChart } from "@/components/ConvergenceChart";
 import { Timeline } from "@/components/Timeline";
+import { ResultPanel } from "@/components/ResultPanel";
 import { Button } from "@/components/ui/Button";
 import { Address } from "@/components/ui/Address";
 import { bps, counter } from "@/lib/format";
@@ -172,15 +173,19 @@ export default function Demo() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[320px_1fr_300px]">
+      {finished && (
+        <div className="mt-4">
+          <ResultPanel
+            job={job}
+            budgetLamports={dep.budgetLamports}
+            settlement={source.settlement()}
+          />
+        </div>
+      )}
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[320px_1fr_300px]">
         {/* Agents */}
         <section aria-label="Agents" className="flex min-w-0 flex-col gap-2">
-          {finished && (
-            <div className="rounded-lg border border-edge bg-panel px-3.5 py-3 text-[11px] leading-relaxed text-dim">
-              This auction has finished. Agent cards show live bids during a run; press{" "}
-              <span className="text-pale">Run job</span> to start another.
-            </div>
-          )}
           {agents.map((a, i) => (
             <AgentCard
               key={a.spec.name}

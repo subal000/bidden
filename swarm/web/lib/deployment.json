@@ -2,6 +2,8 @@
   "jobId": 20,
   "programId": "BjMyKMPtFoWk7wXdSh4iz421H8PFWV1LbWcsJPKCzrhb",
   "erRpc": "https://devnet-as.magicblock.app",
+  "l1Rpc": "https://api.devnet.solana.com",
+  "budgetLamports": 20000000,
   "requester": "2DzDL6VrF1uzjcjd3z68u3GgSxrGzor4RPfJqNgSjucd",
   "jobPda": "GvNBB3nzA1Jkbks7MCFsWC6qUgHhAEyiNbifLyb1wnrf",
   "escrowPda": "2YTyPUdBgaXKnxWvnWCJgynPPxHFHRmMpA7uHVN3ET7W",
