@@ -1,0 +1,29 @@
+# Rust / Anchor build output
+target/
+**/target/
+
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Keypairs. NEVER commit these.
+# swarm/target/deploy/swarm-keypair.json is covered by target/ above, but it is
+# also the program's identity: back it up somewhere outside the repo before you
+# clean, or you cannot deploy to the declared program ID.
+keys/
+**/keys/
+*-keypair.json
+id.json
+
+# Secrets. The Helius key must never be committed.
+.env
+.env.*
+!.env.example
+
+# Local run state
+.swarm-job-id
+.swarm-undelegate-at
+test-ledger/
+*.log
