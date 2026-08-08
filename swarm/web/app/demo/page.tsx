@@ -23,7 +23,13 @@ const dep = deployment as unknown as Deployment & {
   requester: string;
 };
 
-const LIVE = true;
+/**
+ * Live chain data requires the local orchestrator to drive a run, so a hosted
+ * deploy defaults to the in-browser simulation: it auto-replays and always has
+ * something moving, and the badge says "mock" so it can never be mistaken for a
+ * live run. Set NEXT_PUBLIC_LIVE=true locally to read the chain instead.
+ */
+const LIVE = process.env.NEXT_PUBLIC_LIVE === "true";
 
 function sessionBidsSafe(total: number, baseline: number) {
   return Math.max(0, total - baseline);
