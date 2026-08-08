@@ -12,6 +12,8 @@ const LINKS = [
 
 export function Nav() {
   const pathname = usePathname();
+  // Slides are a full-screen recording aid, not a page of the product.
+  if (pathname === "/slides") return null;
   return (
     <header className="sticky top-0 z-50 border-b border-edge/80 bg-ink/85 backdrop-blur-md">
       <nav
@@ -22,7 +24,9 @@ export function Nav() {
           href="/"
           className="flex items-baseline gap-2.5 rounded transition-opacity duration-100 hover:opacity-80"
         >
-          <span className="shrink-0 text-base font-bold tracking-tight text-white">bidden</span>
+          <span className="shrink-0 text-base font-bold tracking-tight text-white">
+            bidden
+          </span>
           <span className="hidden text-[11px] text-dim sm:inline">
             agents are bidden, then they bid
           </span>
@@ -38,7 +42,9 @@ export function Nav() {
                 aria-current={active ? "page" : undefined}
                 className={[
                   "shrink-0 whitespace-nowrap rounded-md px-2 py-2 text-[12px] transition-colors duration-100 sm:px-3 sm:text-[13px]",
-                  active ? "bg-raise text-white" : "text-dim hover:bg-raise/60 hover:text-pale",
+                  active
+                    ? "bg-raise text-white"
+                    : "text-dim hover:bg-raise/60 hover:text-pale",
                 ].join(" ")}
               >
                 {l.label}
