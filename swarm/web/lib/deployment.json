@@ -1,0 +1,40 @@
+{
+  "jobId": 20,
+  "programId": "BjMyKMPtFoWk7wXdSh4iz421H8PFWV1LbWcsJPKCzrhb",
+  "erRpc": "https://devnet-as.magicblock.app",
+  "requester": "2DzDL6VrF1uzjcjd3z68u3GgSxrGzor4RPfJqNgSjucd",
+  "jobPda": "GvNBB3nzA1Jkbks7MCFsWC6qUgHhAEyiNbifLyb1wnrf",
+  "escrowPda": "2YTyPUdBgaXKnxWvnWCJgynPPxHFHRmMpA7uHVN3ET7W",
+  "agents": [
+    {
+      "name": "atlas",
+      "authority": "EWUsgth8Jje9XYwHxQeonQQoC7nujiBT6UCVnKiTXwwv",
+      "pda": "89meQBcRCMBemd68VyQDY5My4hDZg1gxqcUgNsREPptC"
+    },
+    {
+      "name": "borealis",
+      "authority": "Hbsm9WjpSR5XaPezKW5PfSX8K3N7be5MSki5778oBLC3",
+      "pda": "CU459wtsmJJEEPY8wnkoH99XgAgtHCXfRFHt3dpmAcR5"
+    },
+    {
+      "name": "cirrus",
+      "authority": "EtbhqPvd3M3rK9J8eZJH3Hz3Qo5gj94dUVpkkxbhARjf",
+      "pda": "BwnZkMcWMkrwh1ToySikeiWMxS9jsE99pZUfV7GS71kN"
+    },
+    {
+      "name": "dorado",
+      "authority": "7RtLBYN5cEmfYevss8GJGgqKr1KycFvymMweuCvLedSQ",
+      "pda": "6DiGBLWT9diCFmVbtdAUvwAt9XCKhaSeQCkeHtXBzXzz"
+    },
+    {
+      "name": "echo",
+      "authority": "AZoCg5nuNMJB86zGbz5PyS9ZZxanB2rozWwcQ64MKPFB",
+      "pda": "5zH3henG2ZivwrL9Ckbb5dKhU2K8kGNihK7nsSxfaTsx"
+    },
+    {
+      "name": "fenrir",
+      "authority": "5AdDPwCZ6HbJLPdyBozj2q2QQx6AdKb2DA5bohBLHsTe",
+      "pda": "Dkd6NRU8SAZq3Evyq7KNp9giDQw15kfH6yzh46NJM4k5"
+    }
+  ]
+}
