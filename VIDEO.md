@@ -1,6 +1,6 @@
 # Bidden — video script
 
-**~2:50.** Twelve shots. Four browser tabs, nothing else open.
+**~3:00.** Thirteen shots. Four browser tabs, nothing else open.
 
 Every shot below has three lines: **SCREEN** is what the viewer sees, **YOU DO** is your
 hands, **YOU SAY** is word for word. Read only the bold line you need mid-take.
@@ -34,137 +34,153 @@ Switching tabs is `Cmd+1` … `Cmd+4`. Practise the sequence once before you rec
 
 - **"1ms blocks."** It's 22-23 blocks/s, about 43ms. You measured it.
 - **"The signatures are on the explorer"** about rollup transactions. Only the L1 ones are.
+- **"Solana only lands 3 of 200."** That was a public-RPC rate limit, not a Solana limit. A
+  paid endpoint does far better and we never measured it. The defensible argument is cost and
+  reaction latency, which is what slide 3 shows. If someone asks, say exactly that.
 
 ---
 
 # SHOT 1 — the hook · 0:00
 
-**SCREEN** Tab 1. An auction already running. Counter climbing, price falling, cards pulsing.
+**SCREEN** Tab 1. An auction already running. Counter climbing, price falling.
 
-**YOU DO** Nothing. Start recording once the counter is past ~300 so it's moving in the
-first frame. No cursor.
+**YOU DO** Start recording once the counter is past ~300. No cursor.
 
 **YOU SAY**
-> These are six AI agents, and they're bidding against each other for a job. Right now, on
-> Solana.
+> This is an auction running on Solana. Not the result of one, the auction itself.
 >
-> Every one of those is a real transaction. That's [LIVE: N] in the last ten seconds.
->
-> Try the same thing on Solana directly, and three of them land.
+> Every one of those bids is a real transaction. That's [LIVE: N] of them in the last ten
+> seconds, and none of them cost anything.
 
 ---
 
-# SHOT 2 — the setup · 0:12
+# SHOT 2 — the problem · 0:12
 
-**SCREEN** Tab 2, slide 2. *Two agents need to agree on a price.*
+**SCREEN** Tab 2, slide 2. *Bidding doesn't work on a blockchain.*
 
-**YOU DO** `Cmd+2`. Wait one beat before speaking.
+**YOU DO** `Cmd+2`. One beat, then speak.
 
 **YOU SAY**
-> Here's the situation. Two agents need to agree on a price. One wants work done, the other
-> wants to do it.
+> Here's the thing nobody says out loud. Bidding doesn't really work on a blockchain.
 >
-> And they need to prove they agreed. Otherwise you're just trusting somebody again.
+> Not NFT auctions, not solver auctions, not compute markets. Anywhere buyers compete in real
+> time, the competing happens somewhere else.
 
 ---
 
-# SHOT 3 — what it costs · 0:22
+# SHOT 3 — why · 0:24
 
-**SCREEN** Slide 3. **1,100** in huge type.
+**SCREEN** Slide 3. **60** against **698**.
 
-**YOU DO** Press `→` once. **Let the number sit for two full seconds before you speak.**
+**YOU DO** Press `→`. **Let the numbers sit two seconds before you speak.**
 
 **YOU SAY**
-> But agreeing isn't one message. It's hundreds. Bid, counter-bid, back and forth, for half
-> a minute.
+> And the reason is simple. A bid is a transaction.
 >
-> On Solana, three of those land. The rest get rejected before they ever reach consensus.
+> On Solana, confirmation takes about half a second. So in a thirty second auction you get
+> maybe sixty rounds of back and forth, and you pay a fee on every single one.
+>
+> In a rollup, blocks land in forty milliseconds. Same thirty seconds, about seven hundred
+> rounds, and the bids are free.
 
 ---
 
-# SHOT 4 — the product · 0:36
+# SHOT 4 — how it's solved today · 0:42
 
-**SCREEN** Slide 4. The four-step flow.
+**SCREEN** Slide 4. *So everyone moved the auction off chain.*
 
 **YOU DO** Press `→`.
 
 **YOU SAY**
-> So we built Bidden.
+> So nobody runs the auction on chain. They run it off chain and settle the result.
 >
-> You post a job and fund an escrow. Six agents show up and start undercutting each other.
-> Thirty seconds later the lowest bid wins, and the escrow pays out.
+> CoW Swap, UniswapX, 1inch, the compute markets. Solvers submit privately, an operator picks
+> a winner, and the chain only ever sees who won.
 >
-> Nobody's running a matching engine. It all happens on chain.
+> Billions of dollars clear that way, and every time, you're trusting the operator.
 
 ---
 
-# SHOT 5 — why MagicBlock · 0:54
+# SHOT 5 — what we built · 0:58
 
-**SCREEN** Slide 5. The two-lane diagram.
+**SCREEN** Slide 5. The four-step flow.
 
 **YOU DO** Press `→`.
 
 **YOU SAY**
-> Here's the trick.
+> So we put the auction back on chain.
 >
-> The job and the six agents move into a MagicBlock rollup for those thirty seconds. Blocks
-> land in about forty milliseconds, and every bid is free.
+> You post a job and fund an escrow. Bidders compete, and every bid is a real transaction
+> anyone can see. Lowest wins, and the escrow pays out.
 >
-> The escrow doesn't move. It stays on Solana the whole time. If the rollup disappeared
-> mid-auction, the money would still be sitting right there.
+> No operator in the middle.
 
 ---
 
-# SHOT 6 — the divider · 1:12
+# SHOT 6 — how · 1:14
 
-**SCREEN** Slide 7. One word: **Demo**.
+**SCREEN** Slide 6. The two-lane diagram.
 
-**YOU DO** Press `→` twice (skipping the numbers slide). Hold two seconds. Say nothing.
+**YOU DO** Press `→`.
+
+**YOU SAY**
+> The way that works is a MagicBlock Ephemeral Rollup.
+>
+> The auction and everyone bidding move into the rollup for thirty seconds. That's where you
+> get the forty millisecond blocks and the free transactions.
+>
+> The escrow never goes with them. It stays on Solana the whole time. If the rollup
+> disappeared mid-auction, the money is still sitting right there.
 
 ---
 
-# SHOT 7 — the live run · 1:16
+# SHOT 7 — the divider · 1:32
+
+**SCREEN** Slide 7. **Demo**.
+
+**YOU DO** Press `→`. Hold two seconds. Silent.
+
+---
+
+# SHOT 8 — the live run · 1:36
 
 **SCREEN** Tab 1.
 
-**YOU DO** `Cmd+1`. Cursor visible, click **Run job**, then hide the cursor. Let it run.
+**YOU DO** `Cmd+1`. Cursor visible, click **Run job**, then hide the cursor.
 
 **YOU SAY**
-> Let me just run one.
+> Here's one running for real, on devnet.
 >
-> Seven accounts delegate into the rollup, and then the agents start.
+> Six agents, each with its own wallet and its own price floor. They undercut each other for
+> thirty seconds.
 
-**PAUSE ~8 SECONDS.** Say nothing. Let the counter climb and the curve fall. This silence is
-doing more work than any sentence would.
+**PAUSE ~8 SECONDS.** Say nothing. Let the counter climb and the curve fall.
 
 **YOU SAY**
-> [LIVE: N] bids, in thirty seconds. None of them cost anything.
+> [LIVE: N] bids. Every one on chain, and the whole auction cost nothing to run.
 
 ---
 
-# SHOT 8 — the proof · 1:48
+# SHOT 9 — the proof · 2:08
 
-**SCREEN** Tab 3. The ER vs L1 table.
+**SCREEN** Tab 3. The benchmark table.
 
-**YOU DO** `Cmd+3`. Scroll slowly so the `3 / 200` row lands centre frame, then stop. Leave
-it there for the whole shot.
+**YOU DO** `Cmd+3`. Scroll so the table fills the frame, then stop.
 
 **YOU SAY**
-> I wanted to know whether the rollup was actually necessary, so I measured it.
+> I measured all of this rather than assuming it. Same program, same laptop, one endpoint
+> swapped.
 >
-> Same code. Same laptop. I changed one endpoint.
+> The rollup held seven hundred and fifty eight transactions a second with nothing dropped,
+> and I stopped there because I'd made the point.
 >
-> On Solana, six agents bidding at once land three transactions out of two hundred.
-> Concurrency makes it worse, because the burst trips the rate limiter.
->
-> In the rollup, same code, two hundred out of two hundred. I got it up to [MEASURED: 758] a
-> second and stopped there, because I'd made the point.
+> The harness is in the repo. You can rerun it.
 
 ---
 
-# SHOT 9 — the commit · 2:12
+# SHOT 10 — the commit · 2:26
 
-**SCREEN** Tab 1. Lifecycle panel, `Poll L1` spinning.
+**SCREEN** Tab 1. `Poll L1` spinning.
 
 **YOU DO** `Cmd+1`.
 
@@ -176,50 +192,40 @@ it there for the whole shot.
 
 ---
 
-# SHOT 10 — settlement · 2:20
+# SHOT 11 — settlement · 2:34
 
 **SCREEN** Tab 4. The settle transaction, scrolled to the balance changes.
 
 **YOU DO** `Cmd+4`.
 
 **YOU SAY**
-> And there it is. One transaction on Solana. The escrow paid the winner directly:
+> And there it is. One transaction on Solana, and the escrow pays the winner directly.
 > [LIVE: payout] SOL, to whoever bid [LIVE: bid] percent.
 
 ---
 
-# SHOT 11 — the market · 2:32
+# SHOT 12 — the model · 2:44
 
-**SCREEN** Slide 8, then slide 9.
+**SCREEN** Slide 8.
 
-**YOU DO** `Cmd+2`, then `→` to slide 8. Press `→` again on the words "so we sell".
+**YOU DO** `Cmd+2`, then `→` to slide 8.
 
 **YOU SAY**
-> Now, this isn't really about agents.
+> We're not trying to start a marketplace. Marketplaces need two sides, and solver networks
+> already have both.
 >
-> Strip that away and it's competitive bidding with trustless settlement. And that already
-> exists. Solver auctions in DeFi do exactly this today, off chain, because on chain was too
-> slow.
-
-**PRESS →**
-
-> So we sell the auction, not the marketplace. Charge protocols that already have both sides.
-> Take a cut of the volume later, once there's volume worth cutting.
+> So we sell them the auction. Charge per auction, take a cut of volume later.
 
 ---
 
-# SHOT 12 — close · 2:48
+# SHOT 13 — close · 2:56
 
-**SCREEN** Slide 10. The wordmark.
+**SCREEN** Slide 9. The wordmark.
 
-**YOU DO** Press `→`. **Hold three full seconds after the last word** before you stop
-recording.
+**YOU DO** Press `→`. **Hold three seconds after the last word.**
 
 **YOU SAY**
-> Agents can't afford to haggle on a base layer. In a rollup it's free, so they can go as
-> long as they need to.
->
-> Agents are bidden. Then they bid.
+> Auctions moved off chain because chains were too slow. That reason just expired.
 
 ---
 
@@ -227,17 +233,18 @@ recording.
 
 ```
 0:00   tab 1    hook, auction mid-flight
-0:12   tab 2    slide 2   two agents need a price
-0:22            slide 3 → 1,100 · three land        ← let it sit 2s
-0:36            slide 4 → the product, four steps
-0:54            slide 5 → why MagicBlock
-1:12            slide 7 →→ "Demo", hold 2s, silent
-1:16   tab 1    click Run job                       ← 8s of silence mid-shot
-1:48   tab 3    the 3/200 table                     ← slowest shot, don't rush
-2:12   tab 1    commit, then ✂ CUT
-2:20   tab 4    explorer, settlement
-2:32   tab 2    slide 8 → market, slide 9 → model
-2:48            slide 10 → close, hold 3s
+0:12   tab 2    slide 2   bidding doesn't work on chain
+0:24            slide 3 → 60 vs 698 rounds          ← let it sit 2s
+0:42            slide 4 → so everyone moved off chain
+0:58            slide 5 → what we built
+1:14            slide 6 → how, the rollup split
+1:32            slide 7 → "Demo", hold 2s, silent
+1:36   tab 1    click Run job                       ← 8s of silence mid-shot
+2:08   tab 3    the benchmark                       ← don't rush
+2:26   tab 1    commit, then ✂ CUT
+2:34   tab 4    explorer, settlement
+2:44   tab 2    slide 8 → the model
+2:56            slide 9 → close, hold 3s
 ```
 
 Four tab switches. Six arrow presses. Two deliberate silences.
@@ -249,17 +256,14 @@ Four tab switches. Six arrow presses. Two deliberate silences.
 | # | Slide | Used |
 |---|---|---|
 | 1 | bidden — wordmark | no, the hook is stronger |
-| 2 | Two agents need to agree on a price | 0:12 |
-| 3 | **1,100** · on Solana, three land | 0:22 |
-| 4 | A reverse auction that lives on chain | 0:36 |
-| 5 | The talking moves. The money stays. | 0:54 |
-| 6 | **3** vs **200** of 200 | no, tab 3 is better on camera |
-| 7 | Demo | 1:12 |
-| 8 | This already happens. Just not on chain. | 2:32 |
-| 9 | Sell the auction. Not the marketplace. | 2:40 |
-| 10 | bidden — close | 2:48 |
-
-Slides 1 and 6 exist so the deck stands alone if you ever present it without a screen share.
+| 2 | Bidding doesn't work on a blockchain | 0:12 |
+| 3 | **60** vs **698** rounds of bidding | 0:24 |
+| 4 | So everyone moved the auction off chain | 0:42 |
+| 5 | Put the auction back on chain | 0:58 |
+| 6 | The bidding moves. The money stays. | 1:14 |
+| 7 | Demo | 1:32 |
+| 8 | Sell the auction. Not the marketplace. | 2:44 |
+| 9 | bidden — close | 2:56 |
 
 ## Fill in before you export
 

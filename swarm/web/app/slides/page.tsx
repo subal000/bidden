@@ -5,22 +5,24 @@ import { useCallback, useEffect, useState } from "react";
 /**
  * Deck for the demo video.
  *
- * Rhythm is deliberate: a sparse statement, then a stark number, then a flow,
- * then a diagram, then two enormous numbers, then a single word. Slides that all
- * share one skeleton read as filler, and the narration is doing the talking, so
- * most of these carry almost no text.
+ * Structured as a business pitch: problem, why it exists, how it is solved
+ * today, what we built, how, then market and model. Agents are the demo, not
+ * the thesis. The thesis is that competitive bidding cannot live on chain.
+ *
+ * Numbers here are ones we can defend. The "3 of 200" figure from the harness
+ * is a public-RPC rate limit, not a Solana capability limit, so it is not the
+ * headline anywhere. Cost and reaction latency are.
  *
  * Arrows or space advance, F for full screen, ?s=N deep-links a slide.
  */
 const SLIDES = [
   Title,
-  Setup,
-  Cost,
+  Problem,
+  Why,
+  Today,
   Product,
-  Architecture,
-  Proof,
+  How,
   DemoBreak,
-  Scale,
   Model,
   Close,
 ];
@@ -76,7 +78,7 @@ export default function Slides() {
   );
 }
 
-/* 1 — wordmark, nothing else */
+/* 1 */
 function Title() {
   return (
     <div>
@@ -84,51 +86,109 @@ function Title() {
         bidden
       </h1>
       <p className="mt-8 text-3xl text-accent">
-        Agents are bidden. Then they bid.
+        Auctions that actually run on chain.
       </p>
     </div>
   );
 }
 
-/* 2 — one sentence. Let it breathe. */
-function Setup() {
+/* 2 — the problem, stated plainly */
+function Problem() {
   return (
     <div>
       <p className="text-6xl font-bold leading-[1.15] tracking-tight text-white">
-        Two agents need to
+        Bidding doesn&apos;t work
         <br />
-        agree on a price.
+        on a blockchain.
       </p>
-      <p className="mt-10 text-2xl text-dim">
-        And prove it, so nobody has to be trusted.
+      <p className="mt-10 max-w-3xl text-2xl leading-relaxed text-dim">
+        Not NFT auctions. Not solver auctions. Not compute markets. Anywhere
+        buyers compete in real time, the competition happens somewhere else.
       </p>
     </div>
   );
 }
 
-/* 3 — the cost, as a stark contrast rather than prose */
-function Cost() {
+/* 3 — why, in numbers we can defend */
+function Why() {
   return (
     <div>
-      <p className="text-2xl text-pale/80">Agreeing takes about</p>
-      <p className="mt-4 text-[130px] font-bold leading-none tracking-tight text-white">
-        1,100
+      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">Why</p>
+      <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
+        A bid is a transaction.
+      </h2>
+      <p className="mt-6 text-xl text-pale/80">
+        So a thirty second auction looks like this.
       </p>
-      <p className="mt-4 text-2xl text-pale/80">
-        bids, back and forth, in half a minute.
-      </p>
-      <p className="mt-14 border-l-2 border-hot pl-6 text-3xl font-semibold leading-snug text-white">
-        On Solana, three of them land.
+
+      <div className="mt-12 grid grid-cols-2 gap-16">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-dim">
+            On Solana
+          </p>
+          <p className="mt-3 text-[92px] font-bold leading-none tabular-nums text-white">
+            60
+          </p>
+          <p className="mt-2 text-xl text-dim">rounds of bidding</p>
+          <p className="mt-5 text-[15px] text-pale/70">
+            $1.10 in fees, every auction
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-accent">
+            In a rollup
+          </p>
+          <p className="mt-3 text-[92px] font-bold leading-none tabular-nums text-accent">
+            698
+          </p>
+          <p className="mt-2 text-xl text-dim">rounds of bidding</p>
+          <p className="mt-5 text-[15px] text-pale/70">
+            Nothing. Bids are free.
+          </p>
+        </div>
+      </div>
+
+      <p className="mt-10 text-[14px] text-dim">
+        Measured: 498ms median confirmation on Solana devnet, 43ms blocks in the
+        rollup.
       </p>
     </div>
   );
 }
 
-/* 4 — the product as a flow strip, not paragraphs */
+/* 4 — how it is solved today, which is also the market */
+function Today() {
+  return (
+    <div>
+      <h2 className="text-5xl font-bold leading-[1.15] tracking-tight text-white">
+        So everyone moved
+        <br />
+        the auction off chain.
+      </h2>
+      <p className="mt-10 max-w-3xl text-xl leading-relaxed text-pale/80">
+        Solvers submit privately. An operator picks a winner. The chain only
+        sees the result.
+      </p>
+      <div className="mt-10 flex flex-wrap gap-x-10 gap-y-3 text-[15px] text-dim">
+        <span>CoW Swap</span>
+        <span>UniswapX</span>
+        <span>Across</span>
+        <span>1inch Fusion</span>
+        <span>Akash</span>
+        <span>io.net</span>
+      </div>
+      <p className="mt-12 border-l-2 border-hot pl-6 text-2xl font-semibold leading-snug text-white">
+        Billions clear this way. You trust the operator.
+      </p>
+    </div>
+  );
+}
+
+/* 5 — what we built */
 function Product() {
   const steps = [
     ["Post a job", "escrow funded on Solana"],
-    ["Agents undercut", "six of them, 30 seconds"],
+    ["Bidders compete", "every bid a transaction"],
     ["Lowest wins", "nobody in the middle"],
     ["Escrow pays", "one transaction on Solana"],
   ];
@@ -138,7 +198,7 @@ function Product() {
         What we built
       </p>
       <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-        A reverse auction that lives on chain.
+        Put the auction back on chain.
       </h2>
       <ol className="mt-14 grid grid-cols-4 gap-3">
         {steps.map(([t, s], n) => (
@@ -151,19 +211,20 @@ function Product() {
           </li>
         ))}
       </ol>
+      <p className="mt-10 text-[15px] text-dim">
+        Every bid public. No operator to trust. Settlement still on Solana.
+      </p>
     </div>
   );
 }
 
-/* 5 — an actual diagram */
-function Architecture() {
+/* 6 — how */
+function How() {
   return (
     <div>
-      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">
-        Why MagicBlock
-      </p>
+      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">How</p>
       <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-        The talking moves. The money stays.
+        The bidding moves. The money stays.
       </h2>
 
       <div className="mt-14 space-y-3">
@@ -172,7 +233,9 @@ function Architecture() {
             Rollup
           </span>
           <div className="flex-1 rounded-lg border border-accent/40 bg-accent/[0.06] px-6 py-5">
-            <p className="text-[19px] text-white">Job + 6 agent registries</p>
+            <p className="text-[19px] text-white">
+              The auction and every bidder
+            </p>
             <p className="mt-1 text-[14px] text-dim">
               30 seconds · 43ms blocks · every bid free
             </p>
@@ -188,7 +251,7 @@ function Architecture() {
 
         <div className="flex items-center gap-5">
           <span className="w-28 shrink-0 text-right text-[12px] uppercase tracking-wider text-dim">
-            Solana L1
+            Solana
           </span>
           <div className="flex-1 rounded-lg border border-edge bg-panel px-6 py-5">
             <p className="text-[19px] text-white">Escrow · never delegated</p>
@@ -196,84 +259,30 @@ function Architecture() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-/* 6 — two numbers, nothing to read */
-function Proof() {
-  return (
-    <div>
-      <p className="text-2xl text-pale/80">
-        Same code. Same laptop. I changed one endpoint.
-      </p>
-      <div className="mt-12 grid grid-cols-2 gap-16">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-dim">
-            Solana L1
-          </p>
-          <p className="mt-2 text-[110px] font-bold leading-none tabular-nums text-white">
-            3
-          </p>
-          <p className="mt-2 text-xl text-dim">of 200 landed</p>
-        </div>
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-accent">
-            Ephemeral Rollup
-          </p>
-          <p className="mt-2 text-[110px] font-bold leading-none tabular-nums text-accent">
-            200
-          </p>
-          <p className="mt-2 text-xl text-dim">of 200 landed</p>
-        </div>
-      </div>
-      <p className="mt-12 text-[15px] text-dim">
-        I measured this. The harness is in the repo, you can rerun it.
+      <p className="mt-9 text-[15px] text-dim">
+        MagicBlock Ephemeral Rollups. If the rollup vanished mid-auction, the
+        money is still on Solana.
       </p>
     </div>
   );
 }
 
-/* 7 — one word */
+/* 7 */
 function DemoBreak() {
   return (
     <div className="text-center">
       <h2 className="text-[120px] font-bold leading-none tracking-tight text-white">
         Demo
       </h2>
-    </div>
-  );
-}
-
-/* 8 — a claim, then the evidence, small */
-function Scale() {
-  return (
-    <div>
-      <h2 className="text-5xl font-bold leading-[1.15] tracking-tight text-white">
-        This already happens.
-        <br />
-        Just not on chain.
-      </h2>
-      <p className="mt-10 text-xl leading-relaxed text-pale/80">
-        Solver auctions already run competitive bidding. Off chain, because on
-        chain was too slow.
-      </p>
-      <div className="mt-12 flex gap-10 text-[15px] text-dim">
-        <span>CoW Swap</span>
-        <span>UniswapX</span>
-        <span>Across</span>
-        <span className="text-edge">·</span>
-        <span>Akash</span>
-        <span>io.net</span>
-      </div>
-      <p className="mt-12 text-2xl font-semibold text-white">
-        It isn&apos;t any more.
+      <p className="mt-8 text-xl text-dim">
+        Six agents bidding for one job, live on devnet.
       </p>
     </div>
   );
 }
 
-/* 9 — two lines and an admission */
+/* 8 — model */
 function Model() {
   return (
     <div>
@@ -285,19 +294,20 @@ function Model() {
         <br />
         Not the marketplace.
       </h2>
-      <p className="mt-10 text-xl leading-relaxed text-pale/80">
-        Charge per auction, to protocols that already have buyers and sellers.
-        Take a cut of what clears once there is volume worth cutting.
+      <p className="mt-10 max-w-3xl text-xl leading-relaxed text-pale/80">
+        Charge per auction, to protocols that already have bidders. They get
+        verifiable price discovery without building a rollup. Take a cut of
+        volume later, once there is volume worth cutting.
       </p>
-      <p className="mt-14 text-[15px] leading-relaxed text-dim">
-        The obvious risk is a two-sided cold start. Which is why we start with
-        people who already have both sides.
+      <p className="mt-12 text-[15px] leading-relaxed text-dim">
+        We are not starting a marketplace. Marketplaces need two sides. Solver
+        networks already have both.
       </p>
     </div>
   );
 }
 
-/* 10 — close */
+/* 9 */
 function Close() {
   return (
     <div>
@@ -305,7 +315,7 @@ function Close() {
         bidden
       </h1>
       <p className="mt-8 text-3xl text-accent">
-        Agents are bidden. Then they bid.
+        Auctions that actually run on chain.
       </p>
       <p className="mt-16 text-[15px] text-dim">
         github.com/subal000/bidden
