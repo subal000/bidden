@@ -56,7 +56,7 @@ The pitch lands at twelve seconds. Everything after is evidence.
 
 ### ▶ **SWITCH TO WINDOW B** · slides, full screen · `?s=2`
 
-### 2 · 0:12-0:32 · **SLIDE 2** — the problem
+### 2 · 0:12-0:22 · **SLIDE 2** — the setup
 
 > Agents that work together have to agree a price. Verifiably, so nobody has to be trusted.
 >
@@ -66,9 +66,9 @@ The pitch lands at twelve seconds. Everything after is evidence.
 >
 > So every agent marketplace today runs its matching off-chain and asks you to trust it.
 
-### → **ARROW** to slide 3
+### → **ARROW** to slide 3 (the 1,100 number), then slide 4
 
-### 3 · 0:32-0:50 · **SLIDE 3** — the product
+### 3 · 0:22-0:50 · **SLIDES 3 → 4** — the cost, then the product
 
 > Bidden is a live reverse auction, settled on Solana.
 >
@@ -78,9 +78,9 @@ The pitch lands at twelve seconds. Everything after is evidence.
 > Lowest bid wins, and the winner is paid from escrow. There is no matching engine to trust.
 > The auction is the chain.
 
-### → **ARROW** to slide 4
+### → **ARROW** to slide 5
 
-### 4 · 0:50-1:08 · **SLIDE 4** — why MagicBlock
+### 4 · 0:50-1:08 · **SLIDE 5** — why MagicBlock
 
 > Here is the split that makes it work.
 >
@@ -91,9 +91,9 @@ The pitch lands at twelve seconds. Everything after is evidence.
 > mid-auction, the money would be exactly where it started. That is the difference between
 > using a rollup and trusting one.
 
-### → **ARROW** twice, to slide 6 (skip the Proof slide, the real page is better)
+### → **ARROW** twice, to slide 7 (skip the Proof slide, the real page is better)
 
-### 5 · 1:08-1:12 · **SLIDE 6** — demo divider
+### 5 · 1:08-1:12 · **SLIDE 7** — demo divider
 
 Hold two seconds, no narration. Then cut.
 
@@ -160,9 +160,9 @@ visible.
 
 ---
 
-### ▶ **SWITCH TO WINDOW B** · `?s=7`
+### ▶ **SWITCH TO WINDOW B** · `?s=8`
 
-### 10 · 2:28-2:44 · **SLIDE 7 then 8** — where it scales, and the model
+### 10 · 2:28-2:44 · **SLIDES 8 → 9** — where it scales, and the model
 
 Advance to slide 8 on "sell the mechanism".
 
@@ -177,7 +177,7 @@ Advance to slide 8 on "sell the mechanism".
 > So we sell the mechanism before the marketplace. A per-auction fee to protocols that
 > already have supply and demand, and a take rate on settled volume once it clears at scale.
 
-### → **ARROW** to slide 9
+### → **ARROW** to slide 10
 
 ### 11 · 2:44-2:52 · close
 
@@ -194,16 +194,17 @@ Hold three full seconds after the last word before stopping.
 
 ```
 0:00   A   demo          hook, auction mid-flight
-0:12   B   slide 2       the problem
-0:32   B   slide 3   →   the product
-0:50   B   slide 4   →   why MagicBlock
-1:08   B   slide 6  →→   demo divider, hold 2s
+0:12   B   slide 2       two agents want a price
+0:22   B   slide 3   →   1,100 messages, three land
+0:32   B   slide 4   →   the product, as a flow
+0:50   B   slide 5   →   why MagicBlock, the diagram
+1:08   B   slide 7  →→   demo divider, hold 2s
 1:12   A   demo          press Run job, live auction
 1:44   C   benchmark     the 3/200 table
 2:08   A   demo          commit, then ✂ CUT
 2:16   D   explorer      settlement
-2:28   B   slide 7   →   scale, then slide 8 for the model
-2:44   B   slide 9   →   close
+2:28   B   slide 8   →   scale, then slide 9 for the model
+2:44   B   slide 10  →   close
 ```
 
 Four windows, six arrow presses. **Rehearse the switches once without recording.**
@@ -214,17 +215,21 @@ Four windows, six arrow presses. **Rehearse the switches once without recording.
 
 | # | Slide | In video |
 |---|---|---|
-| 1 | **bidden** — title | skipped, the hook is stronger |
-| 2 | Agents can't haggle onchain | 0:12 |
-| 3 | A live reverse auction, settled on Solana | 0:32 |
-| 4 | Negotiation moves. Money does not. | 0:50 |
-| 5 | We measured it instead of assuming it | skipped, `/benchmark` is better on camera |
-| 6 | Demo | 1:08 |
-| 7 | The auction is the product, not the agents | 2:28 |
-| 8 | Sell the mechanism before the marketplace | 2:36 |
-| 9 | **bidden** — close | 2:44 |
+| 1 | **bidden** — wordmark | skipped, the hook is stronger |
+| 2 | Two agents want to agree on a price | 0:12 |
+| 3 | **1,100** messages · on Solana, three land | 0:22 |
+| 4 | A reverse auction that lives on chain | 0:32 |
+| 5 | The talking moves. The money stays. | 0:50 |
+| 6 | **3** vs **200** of 200 landed | skipped, `/benchmark` is better on camera |
+| 7 | **Demo** | 1:08 |
+| 8 | This already happens. Just not on chain. | 2:28 |
+| 9 | Sell the auction. Not the marketplace. | 2:36 |
+| 10 | **bidden** — close | 2:44 |
 
-Slides 1 and 5 exist so the deck stands alone if you ever present it without a screen share.
+Slides 1 and 6 exist so the deck stands alone if you ever present it without a screen share.
+
+The rhythm is deliberate: a sentence, then a number, then a flow, then a diagram, then one
+word. Most slides carry almost no text because the narration is doing the talking.
 
 ## Before export
 

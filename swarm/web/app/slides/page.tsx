@@ -3,22 +3,25 @@
 import { useCallback, useEffect, useState } from "react";
 
 /**
- * Pitch deck for the demo video, in the product's own visual language so cutting
- * between the deck and the app does not look like two different projects.
+ * Deck for the demo video.
  *
- * Arrow keys or space advance, F for full screen, ?s=N deep-links a slide so a
- * take can restart mid-way. Deliberately absent from the nav: a recording aid,
- * not a page of the product.
+ * Rhythm is deliberate: a sparse statement, then a stark number, then a flow,
+ * then a diagram, then two enormous numbers, then a single word. Slides that all
+ * share one skeleton read as filler, and the narration is doing the talking, so
+ * most of these carry almost no text.
+ *
+ * Arrows or space advance, F for full screen, ?s=N deep-links a slide.
  */
 const SLIDES = [
   Title,
-  Problem,
+  Setup,
+  Cost,
   Product,
   Architecture,
   Proof,
   DemoBreak,
   Scale,
-  Business,
+  Model,
   Close,
 ];
 
@@ -54,18 +57,18 @@ export default function Slides() {
   const Slide = SLIDES[i];
 
   return (
-    <main className="fixed inset-0 flex flex-col justify-center bg-ink px-16">
+    <main className="fixed inset-0 flex flex-col justify-center bg-ink px-24">
       <div key={i} className="fade-up mx-auto w-full max-w-5xl">
         <Slide />
       </div>
       <div
-        className="pointer-events-none absolute bottom-6 right-8 flex gap-1"
+        className="pointer-events-none absolute bottom-7 right-9 flex gap-1"
         aria-hidden
       >
         {SLIDES.map((_, n) => (
           <span
             key={n}
-            className={`h-1 w-5 rounded-full ${n === i ? "bg-accent" : "bg-edge"}`}
+            className={`h-1 w-4 rounded-full ${n === i ? "bg-accent" : "bg-edge"}`}
           />
         ))}
       </div>
@@ -73,321 +76,240 @@ export default function Slides() {
   );
 }
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[13px] uppercase tracking-[0.24em] text-accent">
-      {children}
-    </p>
-  );
-}
-
-function H({ children }: { children: React.ReactNode }) {
-  return (
-    <h1 className="mt-5 text-5xl font-bold leading-[1.1] tracking-tight text-white">
-      {children}
-    </h1>
-  );
-}
-
-function Card({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border border-edge bg-panel p-6">
-      <div className="text-[11px] uppercase tracking-[0.18em] text-dim">
-        {label}
-      </div>
-      <div className="mt-4 space-y-2.5 text-[16px] leading-relaxed text-pale/85">
-        {children}
-      </div>
-    </div>
-  );
-}
-
+/* 1 — wordmark, nothing else */
 function Title() {
   return (
-    <div className="text-center">
-      <h1 className="text-8xl font-bold tracking-tight text-white">bidden</h1>
-      <p className="mt-6 text-2xl text-accent">
+    <div>
+      <h1 className="text-[110px] font-bold leading-none tracking-tight text-white">
+        bidden
+      </h1>
+      <p className="mt-8 text-3xl text-accent">
         Agents are bidden. Then they bid.
-      </p>
-      <p className="mt-10 text-[16px] text-dim">
-        An onchain reverse auction for autonomous agents
       </p>
     </div>
   );
 }
 
-function Problem() {
+/* 2 — one sentence. Let it breathe. */
+function Setup() {
   return (
-    <>
-      <Eyebrow>The problem</Eyebrow>
-      <H>Agents can&apos;t haggle onchain.</H>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
-        <Card label="What they need">
-          <p>To agree a price with each other.</p>
-          <p>Verifiably, so nobody has to be trusted.</p>
-        </Card>
-        <Card label="What that costs">
-          <p>Hundreds of messages in seconds.</p>
-          <p>Each one a state change others react to.</p>
-        </Card>
-        <Card label="What happens today">
-          <p>400ms slots. A fee per message.</p>
-          <p>So it happens off-chain, or not at all.</p>
-        </Card>
-      </div>
-      <p className="mt-8 border-l-2 border-hot pl-5 text-xl font-semibold leading-snug text-white">
-        Every agent marketplace today asks you to trust its matching engine.
+    <div>
+      <p className="text-6xl font-bold leading-[1.15] tracking-tight text-white">
+        Two agents want to
+        <br />
+        agree on a price.
       </p>
-    </>
+      <p className="mt-10 text-2xl text-dim">
+        And prove to everyone else that they did.
+      </p>
+    </div>
   );
 }
 
+/* 3 — the cost, as a stark contrast rather than prose */
+function Cost() {
+  return (
+    <div>
+      <p className="text-2xl text-pale/80">A real negotiation takes about</p>
+      <p className="mt-4 text-[130px] font-bold leading-none tracking-tight text-white">
+        1,100
+      </p>
+      <p className="mt-4 text-2xl text-pale/80">messages, in thirty seconds.</p>
+      <p className="mt-14 border-l-2 border-hot pl-6 text-3xl font-semibold leading-snug text-white">
+        On Solana, three of them land.
+      </p>
+    </div>
+  );
+}
+
+/* 4 — the product as a flow strip, not paragraphs */
 function Product() {
+  const steps = [
+    ["Post a job", "escrow funded on Solana"],
+    ["Six agents bid", "30 seconds, undercutting"],
+    ["Lowest wins", "no matching engine"],
+    ["Escrow pays", "one transaction on L1"],
+  ];
   return (
-    <>
-      <Eyebrow>What we built</Eyebrow>
-      <H>A live reverse auction, settled on Solana.</H>
-      <div className="mt-9 space-y-4 text-[18px] leading-relaxed text-pale/85">
-        <p>
-          A requester posts a job and funds an escrow. Six autonomous agents are
-          summoned to it, each with its own keypair, cost floor and reputation.
-        </p>
-        <p>
-          They undercut each other for thirty seconds.{" "}
-          <span className="text-white">Roughly 1,100 real onchain bids.</span>{" "}
-          Lowest bid wins.
-        </p>
-        <p>
-          The winner is paid from escrow by a single transaction on Solana.
-          Every bid, and the award, is public and verifiable.
-        </p>
-      </div>
-      <p className="mt-9 text-[15px] text-dim">
-        No matching engine to trust. The auction{" "}
-        <span className="text-pale">is</span> the chain.
+    <div>
+      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">
+        What we built
       </p>
-    </>
+      <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
+        A reverse auction that lives on chain.
+      </h2>
+      <ol className="mt-14 grid grid-cols-4 gap-3">
+        {steps.map(([t, s], n) => (
+          <li key={t} className="border-t-2 border-edge pt-4">
+            <span className="text-[11px] tabular-nums text-accent">
+              0{n + 1}
+            </span>
+            <p className="mt-2 text-[19px] font-semibold text-white">{t}</p>
+            <p className="mt-1 text-[14px] leading-snug text-dim">{s}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
+/* 5 — an actual diagram */
 function Architecture() {
   return (
-    <>
-      <Eyebrow>Why MagicBlock</Eyebrow>
-      <H>Negotiation moves. Money does not.</H>
-      <div className="mt-8 grid gap-5 md:grid-cols-2">
-        <div className="rounded-xl border border-edge bg-panel p-6">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-dim">
-            Stays on Solana L1
+    <div>
+      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">
+        Why MagicBlock
+      </p>
+      <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
+        The talking moves. The money stays.
+      </h2>
+
+      <div className="mt-14 space-y-3">
+        <div className="flex items-center gap-5">
+          <span className="w-28 shrink-0 text-right text-[12px] uppercase tracking-wider text-accent">
+            Rollup
+          </span>
+          <div className="flex-1 rounded-lg border border-accent/40 bg-accent/[0.06] px-6 py-5">
+            <p className="text-[19px] text-white">Job + 6 agent registries</p>
+            <p className="mt-1 text-[14px] text-dim">
+              ~1,100 bids · 43ms blocks · zero fees · 30 seconds
+            </p>
           </div>
-          <ul className="mt-4 space-y-2.5 text-[16px] text-pale/85">
-            <li>Escrow, never delegated</li>
-            <li>Holds the funds start to finish</li>
-            <li>One settlement transaction</li>
-          </ul>
         </div>
-        <div className="rounded-xl border border-accent/40 bg-accent/[0.05] p-6">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-accent">
-            Moves to the Ephemeral Rollup
+
+        <div className="flex items-center gap-5">
+          <span className="w-28 shrink-0" />
+          <p className="flex-1 pl-6 text-[13px] text-dim">
+            <span className="text-accent">↓</span> delegate, then commit back
+          </p>
+        </div>
+
+        <div className="flex items-center gap-5">
+          <span className="w-28 shrink-0 text-right text-[12px] uppercase tracking-wider text-dim">
+            Solana L1
+          </span>
+          <div className="flex-1 rounded-lg border border-edge bg-panel px-6 py-5">
+            <p className="text-[19px] text-white">Escrow · never delegated</p>
+            <p className="mt-1 text-[14px] text-dim">
+              Holds the money the entire time
+            </p>
           </div>
-          <ul className="mt-4 space-y-2.5 text-[16px] text-pale/85">
-            <li>Job + 6 agent registries</li>
-            <li>~43ms blocks · zero fees</li>
-            <li>For 30 seconds, then it commits back</li>
-          </ul>
         </div>
       </div>
-      <p className="mt-7 text-center text-[15px] text-dim">
-        delegate <span className="mx-2 text-accent">→</span> bid{" "}
-        <span className="mx-2 text-accent">→</span> award{" "}
-        <span className="mx-2 text-accent">→</span> commit back{" "}
-        <span className="mx-2 text-accent">→</span> settle on L1
-      </p>
-      <p className="mt-6 text-[15px] leading-relaxed text-pale/70">
-        If the rollup vanished mid-auction, the money would be exactly where it
-        started. That is the difference between using a rollup and trusting one.
-      </p>
-    </>
+    </div>
   );
 }
 
+/* 6 — two numbers, nothing to read */
 function Proof() {
   return (
-    <>
-      <Eyebrow>The proof</Eyebrow>
-      <H>We measured it instead of assuming it.</H>
-      <p className="mt-6 text-[16px] text-dim">
-        Same program. Same machine. One endpoint changed. 200 transactions per
-        run.
+    <div>
+      <p className="text-2xl text-pale/80">
+        Same program. Same machine. One endpoint changed.
       </p>
-      <div className="mt-8 grid gap-5 md:grid-cols-2">
-        <div className="rounded-xl border border-edge bg-panel p-7">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-dim">
-            On Solana L1
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-6xl font-bold tabular-nums text-white">
-              3
-            </span>
-            <span className="text-xl text-dim">/ 200 landed</span>
-          </div>
-          <p className="mt-3 text-[14px] leading-relaxed text-dim">
-            Concurrency actively hurts. The burst trips the rate limiter.
+      <div className="mt-12 grid grid-cols-2 gap-16">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-dim">
+            Solana L1
           </p>
+          <p className="mt-2 text-[110px] font-bold leading-none tabular-nums text-white">
+            3
+          </p>
+          <p className="mt-2 text-xl text-dim">of 200 landed</p>
         </div>
-        <div className="rounded-xl border border-accent/40 bg-accent/[0.05] p-7">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-accent">
-            In the rollup
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-6xl font-bold tabular-nums text-white">
-              200
-            </span>
-            <span className="text-xl text-dim">/ 200 landed</span>
-          </div>
-          <p className="mt-3 text-[14px] leading-relaxed text-pale/70">
-            Identical config. Zero failures. Zero fees.
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-accent">
+            Ephemeral Rollup
           </p>
+          <p className="mt-2 text-[110px] font-bold leading-none tabular-nums text-accent">
+            200
+          </p>
+          <p className="mt-2 text-xl text-dim">of 200 landed</p>
         </div>
       </div>
-      <p className="mt-7 text-[15px] text-dim">
-        Pushed to <span className="text-pale">758 tx/s</span> before we stopped
-        looking for the ceiling. Harness and raw output are in the repo.
+      <p className="mt-12 text-[15px] text-dim">
+        Measured, not estimated. The harness is in the repo.
       </p>
-    </>
+    </div>
   );
 }
 
+/* 7 — one word */
 function DemoBreak() {
   return (
     <div className="text-center">
-      <Eyebrow>Live on devnet</Eyebrow>
-      <h1 className="mt-8 text-7xl font-bold tracking-tight text-white">
+      <h2 className="text-[120px] font-bold leading-none tracking-tight text-white">
         Demo
-      </h1>
-      <p className="mt-8 text-xl text-pale/70">
-        One job. Six agents. Thirty seconds. Settled on Solana.
+      </h2>
+    </div>
+  );
+}
+
+/* 8 — a claim, then the evidence, small */
+function Scale() {
+  return (
+    <div>
+      <h2 className="text-5xl font-bold leading-[1.15] tracking-tight text-white">
+        This already happens.
+        <br />
+        Just not on chain.
+      </h2>
+      <p className="mt-10 text-xl leading-relaxed text-pale/80">
+        Solver auctions run competitive bidding off-chain, then settle on it.
+        Because on-chain was too slow.
+      </p>
+      <div className="mt-12 flex gap-10 text-[15px] text-dim">
+        <span>CoW Swap</span>
+        <span>UniswapX</span>
+        <span>Across</span>
+        <span className="text-edge">·</span>
+        <span>Akash</span>
+        <span>io.net</span>
+      </div>
+      <p className="mt-12 text-2xl font-semibold text-white">
+        It is not too slow any more.
       </p>
     </div>
   );
 }
 
-function Scale() {
+/* 9 — two lines and an admission */
+function Model() {
   return (
-    <>
-      <Eyebrow>Where this goes</Eyebrow>
-      <H>The auction is the product, not the agents.</H>
-      <p className="mt-6 text-[16px] leading-relaxed text-pale/80">
-        Strip the agent framing away and this is a competitive auction with
-        real-time price discovery and trustless settlement. That primitive
-        already has buyers.
+    <div>
+      <p className="text-[13px] uppercase tracking-[0.24em] text-accent">
+        Business model
       </p>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
-        <Card label="Solver auctions">
-          <p>
-            CoW Swap, UniswapX and intent networks run solver competitions
-            off-chain.
-          </p>
-          <p className="text-dim">
-            Because onchain was too slow. It no longer is.
-          </p>
-        </Card>
-        <Card label="Compute markets">
-          <p>
-            Akash, io.net and GPU spot pricing settle onchain but price off it.
-          </p>
-          <p className="text-dim">Many suppliers, prices that move fast.</p>
-        </Card>
-        <Card label="Agent economies">
-          <p>
-            Agent payment rails are arriving. Price discovery between them is
-            not.
-          </p>
-          <p className="text-dim">The bet on 2026, not the business today.</p>
-        </Card>
-      </div>
-    </>
+      <h2 className="mt-5 text-5xl font-bold leading-[1.15] tracking-tight text-white">
+        Sell the auction.
+        <br />
+        Not the marketplace.
+      </h2>
+      <p className="mt-10 text-xl leading-relaxed text-pale/80">
+        A per-auction fee to protocols that already have buyers and sellers.
+        Then a take rate on what clears, once it clears at scale.
+      </p>
+      <p className="mt-14 text-[15px] leading-relaxed text-dim">
+        The obvious risk is a two-sided cold start. Which is exactly why the
+        first customers are people who already have both sides.
+      </p>
+    </div>
   );
 }
 
-function Business() {
-  return (
-    <>
-      <Eyebrow>Business model</Eyebrow>
-      <H>Sell the mechanism before the marketplace.</H>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
-        <div className="rounded-xl border border-accent/40 bg-accent/[0.05] p-6">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-accent">
-            Now
-          </div>
-          <p className="mt-3 text-[17px] font-semibold text-white">
-            License the engine
-          </p>
-          <p className="mt-2 text-[14px] leading-relaxed text-pale/75">
-            Per-auction fee to protocols that already have supply and demand.
-            Revenue before network effects, and we are a vendor rather than a
-            market maker.
-          </p>
-        </div>
-        <Card label="Next">
-          <p className="text-[17px] font-semibold text-white">
-            Take rate on settled volume
-          </p>
-          <p className="text-[14px] text-pale/75">
-            Basis points on what clears. Scales with the market, worth nothing
-            at zero.
-          </p>
-        </Card>
-        <Card label="Honest risk">
-          <p className="text-[17px] font-semibold text-white">
-            Two-sided cold start
-          </p>
-          <p className="text-[14px] text-pale/75">
-            No supply, no demand yet. Which is exactly why we sell to people who
-            already have both.
-          </p>
-        </Card>
-      </div>
-      <p className="mt-8 text-[15px] leading-relaxed text-dim">
-        The moat is not the program. It is being first to prove high-frequency
-        onchain price discovery works, with a benchmark anyone can rerun.
-      </p>
-    </>
-  );
-}
-
+/* 10 — close */
 function Close() {
   return (
-    <div className="text-center">
-      <h1 className="text-7xl font-bold tracking-tight text-white">bidden</h1>
-      <p className="mt-5 text-2xl text-accent">
+    <div>
+      <h1 className="text-[110px] font-bold leading-none tracking-tight text-white">
+        bidden
+      </h1>
+      <p className="mt-8 text-3xl text-accent">
         Agents are bidden. Then they bid.
       </p>
-      <dl className="mx-auto mt-14 grid max-w-3xl grid-cols-3 gap-8">
-        {[
-          ["Bids per auction", "~1,100"],
-          ["On Solana L1", "3 of 200"],
-          ["In the rollup", "200 of 200"],
-        ].map(([k, v]) => (
-          <div key={k}>
-            <dt className="text-[11px] uppercase tracking-[0.16em] text-dim">
-              {k}
-            </dt>
-            <dd className="mt-1.5 text-3xl font-bold tabular-nums text-white">
-              {v}
-            </dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-14 text-[15px] text-dim">
+      <p className="mt-16 text-[15px] text-dim">
         github.com/subal000/bidden
-        <span className="mx-3 text-edge">·</span>
+        <span className="mx-4 text-edge">·</span>
         Solana Blitz V7
       </p>
     </div>
