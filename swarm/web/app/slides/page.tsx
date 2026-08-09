@@ -255,8 +255,8 @@ function Scale() {
         Just not on chain.
       </h2>
       <p className="mt-10 text-xl leading-relaxed text-pale/80">
-        Solver auctions run competitive bidding off-chain, then settle on it.
-        Because on-chain was too slow.
+        Solver auctions already run competitive bidding. Off chain, because on
+        chain was too slow.
       </p>
       <div className="mt-12 flex gap-10 text-[15px] text-dim">
         <span>CoW Swap</span>
@@ -267,7 +267,7 @@ function Scale() {
         <span>io.net</span>
       </div>
       <p className="mt-12 text-2xl font-semibold text-white">
-        It is not too slow any more.
+        It isn&apos;t any more.
       </p>
     </div>
   );
@@ -286,12 +286,12 @@ function Model() {
         Not the marketplace.
       </h2>
       <p className="mt-10 text-xl leading-relaxed text-pale/80">
-        A per-auction fee to protocols that already have buyers and sellers.
-        Then a take rate on what clears, once it clears at scale.
+        Charge per auction, to protocols that already have buyers and sellers.
+        Take a cut of what clears once there is volume worth cutting.
       </p>
       <p className="mt-14 text-[15px] leading-relaxed text-dim">
-        The obvious risk is a two-sided cold start. Which is exactly why the
-        first customers are people who already have both sides.
+        The obvious risk is a two-sided cold start. Which is why we start with
+        people who already have both sides.
       </p>
     </div>
   );
