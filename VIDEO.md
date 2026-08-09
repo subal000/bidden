@@ -2,7 +2,7 @@
 
 One video, both jobs. **Target 2:50.** Hard ceiling 3:00.
 
-The deck carries the pitch, the app carries the demo. Eleven shots, four windows.
+The deck carries the pitch, the app carries the demo. Twelve shots, four windows.
 
 ---
 
@@ -56,52 +56,56 @@ The pitch lands at twelve seconds. Everything after is evidence.
 
 ### ▶ **SWITCH TO WINDOW B** · slides, full screen · `?s=2`
 
-### 2 · 0:12-0:22 · **SLIDE 2** — the setup
+### 2 · 0:12-0:22 · **SLIDE 2** — "Two agents want to agree on a price"
 
-> Agents that work together have to agree a price. Verifiably, so nobody has to be trusted.
+> Two agents that work together have to agree on a price. And prove to everyone else that
+> they did, or you are back to trusting somebody.
+
+### → **ARROW** to slide 3
+
+### 3 · 0:22-0:36 · **SLIDE 3** — the 1,100 number
+
+Let the number sit for a beat before you speak.
+
+> A real negotiation is chatty. Bids, counter-bids, hundreds of them in half a minute.
 >
-> But negotiation is chatty. Hundreds of messages in seconds, each one a state change the
-> others react to. At four hundred millisecond slots with a fee per message, that is
-> economically dead on a base layer.
->
-> So every agent marketplace today runs its matching off-chain and asks you to trust it.
+> Try that on Solana and three land. The rest are rejected before they reach consensus.
 
-### → **ARROW** to slide 3 (the 1,100 number), then slide 4
+### → **ARROW** to slide 4
 
-### 3 · 0:22-0:50 · **SLIDES 3 → 4** — the cost, then the product
+### 4 · 0:36-0:54 · **SLIDE 4** — the product, as a flow
 
-> Bidden is a live reverse auction, settled on Solana.
+> Bidden is a reverse auction that lives on chain.
 >
 > A requester posts a job and funds an escrow. Six agents are summoned to it, each with its
-> own keypair, cost floor and reputation. They undercut each other for thirty seconds.
+> own keypair and its own cost floor. They undercut each other for thirty seconds, the lowest
+> bid wins, and the escrow pays out.
 >
-> Lowest bid wins, and the winner is paid from escrow. There is no matching engine to trust.
-> The auction is the chain.
+> No matching engine in the middle to trust.
 
 ### → **ARROW** to slide 5
 
-### 4 · 0:50-1:08 · **SLIDE 5** — why MagicBlock
+### 5 · 0:54-1:12 · **SLIDE 5** — why MagicBlock
 
-> Here is the split that makes it work.
+> Here is the trick.
 >
 > The job and the six agent registries delegate into a MagicBlock Ephemeral Rollup for the
-> thirty seconds bidding takes. Forty three millisecond blocks, zero fees.
+> thirty seconds bidding takes. Forty three millisecond blocks, and every bid is free.
 >
-> The escrow is never delegated. It sits on Solana the entire time. If the rollup vanished
-> mid-auction, the money would be exactly where it started. That is the difference between
-> using a rollup and trusting one.
+> The escrow never moves. It sits on Solana the whole time. If the rollup vanished
+> mid-auction, the money would be exactly where it started.
 
-### → **ARROW** twice, to slide 7 (skip the Proof slide, the real page is better)
+### → **ARROW** twice, to slide 7 (skip Proof, the real page is better on camera)
 
-### 5 · 1:08-1:12 · **SLIDE 7** — demo divider
+### 6 · 1:12-1:16 · **SLIDE 7** — "Demo"
 
-Hold two seconds, no narration. Then cut.
+Hold two seconds. No narration. Then cut.
 
 ---
 
 ### ▶ **SWITCH TO WINDOW A** — the live run
 
-### 6 · 1:12-1:44 · the auction
+### 7 · 1:16-1:48 · the auction
 
 Cursor visible, click **Run job**. Then hide the cursor. Leave silence in the middle and let
 the motion carry it.
@@ -119,7 +123,7 @@ the motion carry it.
 
 ### ▶ **SWITCH TO WINDOW C** — the measurement
 
-### 7 · 1:44-2:08 · the proof
+### 8 · 1:48-2:12 · the proof
 
 Scroll slowly so the `3 / 200` row lands centre frame and rests there. Your strongest
 content. Do not rush it.
@@ -139,7 +143,7 @@ content. Do not rush it.
 
 ### ▶ **SWITCH TO WINDOW A** — the commit
 
-### 8 · 2:08-2:16 · committing back
+### 9 · 2:12-2:20 · committing back
 
 Show the lifecycle panel with `Poll L1` spinning.
 
@@ -150,7 +154,7 @@ Show the lifecycle panel with `Poll L1` spinning.
 
 ### ▶ **SWITCH TO WINDOW D** — Solana Explorer
 
-### 9 · 2:16-2:28 · settlement
+### 10 · 2:20-2:32 · settlement
 
 Scroll to the balance changes so escrow going to zero and the winner going up are both
 visible.
@@ -162,7 +166,7 @@ visible.
 
 ### ▶ **SWITCH TO WINDOW B** · `?s=8`
 
-### 10 · 2:28-2:44 · **SLIDES 8 → 9** — where it scales, and the model
+### 11 · 2:32-2:48 · **SLIDES 8 → 9** — where it scales, and the model
 
 Advance to slide 8 on "sell the mechanism".
 
@@ -179,7 +183,7 @@ Advance to slide 8 on "sell the mechanism".
 
 ### → **ARROW** to slide 10
 
-### 11 · 2:44-2:52 · close
+### 12 · 2:48-2:56 · close
 
 Hold three full seconds after the last word before stopping.
 
@@ -196,15 +200,15 @@ Hold three full seconds after the last word before stopping.
 0:00   A   demo          hook, auction mid-flight
 0:12   B   slide 2       two agents want a price
 0:22   B   slide 3   →   1,100 messages, three land
-0:32   B   slide 4   →   the product, as a flow
-0:50   B   slide 5   →   why MagicBlock, the diagram
-1:08   B   slide 7  →→   demo divider, hold 2s
-1:12   A   demo          press Run job, live auction
-1:44   C   benchmark     the 3/200 table
-2:08   A   demo          commit, then ✂ CUT
-2:16   D   explorer      settlement
-2:28   B   slide 8   →   scale, then slide 9 for the model
-2:44   B   slide 10  →   close
+0:36   B   slide 4   →   the product, as a flow
+0:54   B   slide 5   →   why MagicBlock, the diagram
+1:12   B   slide 7  →→   "Demo", hold 2s
+1:16   A   demo          press Run job, live auction
+1:48   C   benchmark     the 3/200 table
+2:12   A   demo          commit, then ✂ CUT
+2:20   D   explorer      settlement
+2:32   B   slide 8   →   scale, then slide 9 for the model
+2:48   B   slide 10  →   close
 ```
 
 Four windows, six arrow presses. **Rehearse the switches once without recording.**
