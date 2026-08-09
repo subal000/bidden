@@ -95,12 +95,12 @@ function Setup() {
   return (
     <div>
       <p className="text-6xl font-bold leading-[1.15] tracking-tight text-white">
-        Two agents want to
+        Two agents need to
         <br />
         agree on a price.
       </p>
       <p className="mt-10 text-2xl text-dim">
-        And prove to everyone else that they did.
+        And prove it, so nobody has to be trusted.
       </p>
     </div>
   );
@@ -110,11 +110,13 @@ function Setup() {
 function Cost() {
   return (
     <div>
-      <p className="text-2xl text-pale/80">A real negotiation takes about</p>
+      <p className="text-2xl text-pale/80">Agreeing takes about</p>
       <p className="mt-4 text-[130px] font-bold leading-none tracking-tight text-white">
         1,100
       </p>
-      <p className="mt-4 text-2xl text-pale/80">messages, in thirty seconds.</p>
+      <p className="mt-4 text-2xl text-pale/80">
+        bids, back and forth, in half a minute.
+      </p>
       <p className="mt-14 border-l-2 border-hot pl-6 text-3xl font-semibold leading-snug text-white">
         On Solana, three of them land.
       </p>
@@ -126,9 +128,9 @@ function Cost() {
 function Product() {
   const steps = [
     ["Post a job", "escrow funded on Solana"],
-    ["Six agents bid", "30 seconds, undercutting"],
-    ["Lowest wins", "no matching engine"],
-    ["Escrow pays", "one transaction on L1"],
+    ["Agents undercut", "six of them, 30 seconds"],
+    ["Lowest wins", "nobody in the middle"],
+    ["Escrow pays", "one transaction on Solana"],
   ];
   return (
     <div>
@@ -172,7 +174,7 @@ function Architecture() {
           <div className="flex-1 rounded-lg border border-accent/40 bg-accent/[0.06] px-6 py-5">
             <p className="text-[19px] text-white">Job + 6 agent registries</p>
             <p className="mt-1 text-[14px] text-dim">
-              ~1,100 bids · 43ms blocks · zero fees · 30 seconds
+              30 seconds · 43ms blocks · every bid free
             </p>
           </div>
         </div>
@@ -190,9 +192,7 @@ function Architecture() {
           </span>
           <div className="flex-1 rounded-lg border border-edge bg-panel px-6 py-5">
             <p className="text-[19px] text-white">Escrow · never delegated</p>
-            <p className="mt-1 text-[14px] text-dim">
-              Holds the money the entire time
-            </p>
+            <p className="mt-1 text-[14px] text-dim">Never moves. Not once.</p>
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@ function Proof() {
   return (
     <div>
       <p className="text-2xl text-pale/80">
-        Same program. Same machine. One endpoint changed.
+        Same code. Same laptop. I changed one endpoint.
       </p>
       <div className="mt-12 grid grid-cols-2 gap-16">
         <div>
@@ -228,7 +228,7 @@ function Proof() {
         </div>
       </div>
       <p className="mt-12 text-[15px] text-dim">
-        Measured, not estimated. The harness is in the repo.
+        I measured this. The harness is in the repo, you can rerun it.
       </p>
     </div>
   );
