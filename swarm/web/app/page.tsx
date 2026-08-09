@@ -5,10 +5,7 @@ export default function Home() {
   return (
     <main className="mx-auto w-full max-w-6xl overflow-x-hidden px-4 sm:px-6">
       <section className="fade-up py-20 sm:py-28">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-accent">
-          Solana Blitz V7 · Collaboration
-        </p>
-        <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
+        <h1 className="max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl">
           Agents are bidden. Then they bid.
         </h1>
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-pale/80">
