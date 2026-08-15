@@ -18,20 +18,21 @@ import (
 )
 
 var (
-	fMode      = flag.String("mode", "", "fund|register|post-job|delegate|prepare|bid|award|undelegate|poll|settle|verify|addresses|lifecycle")
-	fL1        = flag.String("l1", envOr("L1_RPC", "https://api.devnet.solana.com"), "L1 RPC (or set L1_RPC)")
-	fER        = flag.String("er", "https://devnet-as.magicblock.app", "ER RPC")
-	fValidator = flag.String("validator", "MAS1Dt9qreoRMQ14YQuhg8UTZMMzDdKhmkZMECCzk57", "ER validator identity, identical for every delegation")
-	fWallet    = flag.String("wallet", os.Getenv("HOME")+"/.config/solana/swarm-deployer.json", "requester / payer keypair")
-	fKeyDir    = flag.String("keydir", "keys", "directory holding the agent keypairs")
-	fAgents    = flag.Int("agents", 6, "number of agents")
-	fBids      = flag.Int("bids", 200, "total bids to submit (0 = unbounded, use --duration)")
-	fN         = flag.Int("n", -1, "alias for --bids, as used in the runbook")
-	fSenders   = flag.Int("senders", 0, "concurrent senders, defaults to --agents")
-	fDuration  = flag.Duration("duration", 0, "time-box the bid phase instead of a fixed count")
-	fBudget    = flag.Uint64("budget", 20_000_000, "escrow budget in lamports")
-	fBidWindow = flag.Duration("bid-window", 0, "spread bids over this long (0 = as fast as possible)")
-	fJobID     = flag.Int64("job-id", -1, "job id; -1 reads .swarm-job-id and auto-increments after settle")
+	fMode       = flag.String("mode", "", "fund|register|post-job|delegate|start-bidding|bid|award|undelegate|poll|settle|audit|verify|addresses|lifecycle|prepare")
+	fL1         = flag.String("l1", envOr("L1_RPC", "https://api.devnet.solana.com"), "L1 RPC (or set L1_RPC)")
+	fER         = flag.String("er", "https://devnet-as.magicblock.app", "ER RPC")
+	fValidator  = flag.String("validator", "MAS1Dt9qreoRMQ14YQuhg8UTZMMzDdKhmkZMECCzk57", "ER validator identity, identical for every delegation")
+	fWallet     = flag.String("wallet", os.Getenv("HOME")+"/.config/solana/swarm-deployer.json", "requester / payer keypair")
+	fKeyDir     = flag.String("keydir", "keys", "directory holding the agent keypairs")
+	fAgents     = flag.Int("agents", 6, "number of agents")
+	fBids       = flag.Int("bids", 200, "total bids to submit (0 = unbounded, use --duration)")
+	fN          = flag.Int("n", -1, "alias for --bids, as used in the runbook")
+	fSenders    = flag.Int("senders", 0, "concurrent senders, defaults to --agents")
+	fDuration   = flag.Duration("duration", 0, "time-box the bid phase instead of a fixed count")
+	fBudget     = flag.Uint64("budget", 20_000_000, "escrow budget in lamports")
+	fBidSeconds = flag.Int("bid-seconds", 30, "how long the auction stays open, converted to ER slots")
+	fBidWindow  = flag.Duration("bid-window", 0, "spread bids over this long (0 = as fast as possible)")
+	fJobID      = flag.Int64("job-id", -1, "job id; -1 reads .swarm-job-id and auto-increments after settle")
 )
 
 const (
@@ -90,6 +91,10 @@ func main() {
 		d.post()
 	case "delegate":
 		d.delegate()
+	case "start-bidding":
+		d.startBidding()
+	case "audit":
+		d.audit()
 	case "bid":
 		d.bid()
 	case "award":
@@ -597,6 +602,7 @@ func (d *Driver) award() {
 	if j.BestBidder.IsZero() {
 		check(fmt.Errorf("no bids recorded, nothing to award"))
 	}
+	d.waitForDeadline(j.DeadlineSlot)
 
 	bh, _, err := d.er.LatestBlockhash(d.ctx, "confirmed")
 	check(err)
@@ -834,12 +840,140 @@ func (d *Driver) readJob(c *Client, pk solana.PublicKey) (*Job, error) {
 	return parseJob(ai.Data)
 }
 
+// The ER was measured at 22-23 blocks/s. The floor is used so the stamped
+// deadline is never shorter than the wall clock the agents bid for; arriving a
+// little late costs nothing, arriving early would cut the auction short.
+const erSlotsPerSecond = 22
+
+func erSlotsFor(seconds int) uint64 {
+	slots := uint64(seconds) * erSlotsPerSecond
+	if slots < 100 { // MIN_BIDDING_SLOTS in the program
+		slots = 100
+	}
+	return slots
+}
+
+// startBidding opens the auction inside the ER. The deadline has to be stamped
+// here rather than at post_job: L1 and the ER run different slot domains.
+// Measured on devnet, L1 sat at 484,191,390 while the ER was at 535,823,095,
+// advancing about 4.5x faster. A deadline derived from L1 is already in the
+// ER's past, so the guard would pass instantly and protect nothing.
+func (d *Driver) startBidding() {
+	d.begin("open bidding in the ER and stamp the deadline")
+	job := d.job()
+	j, err := d.readJob(d.er, job)
+	check(err)
+	if j.Status != StatusOpen {
+		ok("already open for bidding (status %s, deadline slot %d)", j.Status, j.DeadlineSlot)
+		return
+	}
+
+	slots := erSlotsFor(*fBidSeconds)
+	info("%ds of bidding at the measured ~%d ER slots/s = %d slots", *fBidSeconds, erSlotsPerSecond, slots)
+
+	bh, _, err := d.er.LatestBlockhash(d.ctx, "confirmed")
+	check(err)
+	tx, err := buildSigned(
+		[]solana.Instruction{ixStartBidding(job, d.wallet.PublicKey(), slots)},
+		bh, d.wallet)
+	check(err)
+	sig, err := d.er.SendTx(d.ctx, tx, false)
+	check(err)
+	ok("start_bidding sig (ER) %s", sig[:20])
+
+	deadline := time.Now().Add(20 * time.Second)
+	for {
+		j, err := d.readJob(d.er, job)
+		if err == nil && j.Status == StatusBidding {
+			ok("bidding open, closes at ER slot %d", j.DeadlineSlot)
+			return
+		}
+		if time.Now().After(deadline) {
+			check(fmt.Errorf("start_bidding did not take effect within 20s"))
+		}
+		time.Sleep(300 * time.Millisecond)
+	}
+}
+
+// waitForDeadline blocks until the ER clock has actually passed the auction
+// deadline, so award_job is never sent into a guaranteed BiddingStillOpen.
+func (d *Driver) waitForDeadline(deadlineSlot uint64) {
+	for {
+		slot, err := d.er.Slot(d.ctx)
+		check(err)
+		if slot >= deadlineSlot {
+			ok("ER slot %d has passed the deadline %d", slot, deadlineSlot)
+			return
+		}
+		info("ER slot %d, waiting for %d (%d to go)", slot, deadlineSlot, deadlineSlot-slot)
+		time.Sleep(time.Second)
+	}
+}
+
+// audit proves the auction cannot be closed early. It bids high, then tries to
+// award itself immediately, which is the exploit the deadline guard exists to
+// stop. A successful audit is a REJECTED transaction.
+func (d *Driver) audit() {
+	d.begin("audit: attempt to win the auction by awarding early")
+	job := d.job()
+	j, err := d.readJob(d.er, job)
+	check(err)
+	if j.Status != StatusBidding {
+		check(fmt.Errorf("audit needs a job in Bidding, found %s", j.Status))
+	}
+	slot, err := d.er.Slot(d.ctx)
+	check(err)
+	if slot >= j.DeadlineSlot {
+		check(fmt.Errorf("deadline already passed, rerun the audit on a fresh job"))
+	}
+	info("ER slot %d, deadline %d, %d slots remain", slot, j.DeadlineSlot, j.DeadlineSlot-slot)
+
+	attacker := d.agents[0]
+	bh, _, err := d.er.LatestBlockhash(d.ctx, "confirmed")
+	check(err)
+
+	// skipPreflight is false on purpose. With it true the RPC hands back a
+	// signature without simulating, so a rejected instruction looks identical
+	// to a successful one and the audit passes on a transaction that never ran.
+	// A failed read is not a zero.
+	const runPreflight = false
+
+	// Step 1: bid at 99.99% of budget.
+	tx, err := buildSigned(
+		[]solana.Instruction{ixSubmitBid(job, attacker.PublicKey(), 9999)}, bh, attacker)
+	check(err)
+	_, err = d.er.SendTx(d.ctx, tx, runPreflight)
+	check(err)
+	info("attacker %s bid 9999 bps", attacker.PublicKey().String()[:8])
+
+	// Step 2: try to award itself before the deadline. This must be rejected.
+	tx, err = buildSigned(
+		[]solana.Instruction{ixAwardJob(job, agentPDA(attacker.PublicKey()), attacker.PublicKey())},
+		bh, attacker)
+	check(err)
+	_, sendErr := d.er.SendTx(d.ctx, tx, runPreflight)
+
+	// The authoritative check is the account, not the send result.
+	time.Sleep(2 * time.Second)
+	after, err := d.readJob(d.er, job)
+	check(err)
+	if after.Status != StatusBidding {
+		check(fmt.Errorf("EXPLOIT OPEN: status moved to %s before the deadline", after.Status))
+	}
+	if sendErr == nil {
+		check(fmt.Errorf("EXPLOIT OPEN: award_job was accepted before the deadline"))
+	}
+	ok("award rejected: %v", sendErr)
+	ok("job still %s at %d bps, auction intact", after.Status, after.BestBidBps)
+}
+
 func (d *Driver) lifecycle() {
 	fmt.Println(strings.Repeat("=", 72))
 	d.fund()
 	d.register()
 	d.post()
 	d.delegate()
+	d.startBidding()
 	d.bid()
 	d.award()
 	d.undelegate()
@@ -873,8 +1007,8 @@ func (d *Driver) addresses() {
 		ErRpc:     *fER,
 		// Public endpoint on purpose: this is read from a visitor's browser and
 		// must not carry our key.
-		L1Rpc:  "https://api.devnet.solana.com",
-		Budget: *fBudget,
+		L1Rpc:     "https://api.devnet.solana.com",
+		Budget:    *fBudget,
 		Requester: d.wallet.PublicKey().String(),
 		JobPda:    job.String(),
 		EscrowPda: escrowPDA(job).String(),
@@ -898,7 +1032,6 @@ func (d *Driver) addresses() {
 	ok("wrote %s", path)
 	fmt.Println(string(b))
 }
-
 
 // prepare finds the first unused job id, creates and delegates it, and writes
 // the frontend address file. This is what makes the demo button reusable: a
@@ -943,6 +1076,9 @@ func (d *Driver) prepare() {
 		d.post()
 	}
 	d.delegate()
+	// Opening the auction is part of preparing it: the deadline can only be
+	// stamped once the Job is delegated and reachable in the ER.
+	d.startBidding()
 	d.addresses()
 
 	// Parsed by the web orchestrator.

@@ -32,3 +32,6 @@ swarm/agents/agents
 .swarm-undelegate-at
 test-ledger/
 *.log
+
+# Compiled driver binary; rebuilt by `go build` and platform specific.
+swarm/driver/driver

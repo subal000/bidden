@@ -12,6 +12,12 @@ pub const AGENT_SEED: &[u8] = b"agent";
 /// Bids are basis points of the escrowed budget. 10000 = the full budget.
 pub const FULL_BPS: u16 = 10_000;
 
+/// Floor on how long bidding must stay open, counted in Ephemeral Rollup
+/// slots. The ER was measured at 22-23 slots/s, so this is roughly four
+/// seconds. It exists to reject a zero-length auction, not to shape the
+/// demo, which runs ~690 slots.
+pub const MIN_BIDDING_SLOTS: u64 = 100;
+
 #[ephemeral]
 #[program]
 pub mod swarm {
@@ -118,9 +124,10 @@ pub mod swarm {
     pub fn submit_bid(ctx: Context<SubmitBid>, bid_bps: u16) -> Result<()> {
         let job = &mut ctx.accounts.job;
         job.bid_count = job.bid_count.saturating_add(1);
-        if job.status == JobStatus::Open {
-            job.status = JobStatus::Bidding;
-        }
+        // Only `start_bidding` may open the auction. It is what stamps the
+        // deadline in the ER clock domain, so a bid that arrives first must
+        // not be able to flip the state and leave `deadline_slot` holding the
+        // L1-derived value it was posted with.
         if job.status == JobStatus::Bidding && bid_bps < job.best_bid_bps {
             job.best_bid_bps = bid_bps;
             job.best_bidder = ctx.accounts.authority.key();
@@ -135,12 +142,46 @@ pub mod swarm {
         Ok(())
     }
 
+    /// Opens the auction and stamps its deadline. Runs in the ER.
+    ///
+    /// The deadline has to be written here rather than at `post_job`, because
+    /// the two run in different clock domains. Measured on devnet: L1 was at
+    /// slot 484,191,390 while the ER was at 535,823,095, and the ER advances
+    /// about 4.5x faster. An L1-derived deadline compared against the ER clock
+    /// is already in the past, so the check would pass instantly and guard
+    /// nothing. Stamping it from `Clock` inside the ER keeps both sides of the
+    /// comparison in one domain.
+    ///
+    /// Restricted to the requester: they funded the escrow, so a short auction
+    /// only costs them money. Closing it stays permissionless.
+    pub fn start_bidding(ctx: Context<StartBidding>, duration_slots: u64) -> Result<()> {
+        require!(
+            duration_slots >= MIN_BIDDING_SLOTS,
+            SwarmError::BiddingTooShort
+        );
+        let job = &mut ctx.accounts.job;
+        require!(job.status == JobStatus::Open, SwarmError::BadState);
+        job.deadline_slot = Clock::get()?
+            .slot
+            .checked_add(duration_slots)
+            .ok_or(SwarmError::MathOverflow)?;
+        job.status = JobStatus::Bidding;
+        Ok(())
+    }
+
     /// Closes bidding. Runs in the ER once the deadline slot has passed.
     /// Touches the Job and the winner's registry, which is the transaction that
     /// requires both to share a validator identity.
     pub fn award_job(ctx: Context<AwardJob>) -> Result<()> {
         let job = &mut ctx.accounts.job;
         require!(job.status == JobStatus::Bidding, SwarmError::BadState);
+        // Without this, any bidder could bid 9999 and immediately award itself
+        // in the next block, freezing the price at 99.99% of budget while the
+        // counter kept climbing. Two free transactions, about 86ms.
+        require!(
+            Clock::get()?.slot >= job.deadline_slot,
+            SwarmError::BiddingStillOpen
+        );
         require!(job.best_bidder != Pubkey::default(), SwarmError::NoBids);
         require_keys_eq!(
             ctx.accounts.winner_agent.authority,
@@ -293,6 +334,10 @@ pub enum SwarmError {
     MathOverflow,
     #[msg("escrow has insufficient lamports")]
     EscrowUnderflow,
+    #[msg("bidding is still open, the deadline slot has not passed")]
+    BiddingStillOpen,
+    #[msg("bidding window is shorter than the minimum")]
+    BiddingTooShort,
 }
 
 // =================================================================== contexts
@@ -370,6 +415,13 @@ pub struct SubmitBid<'info> {
     #[account(mut, has_one = authority)]
     pub agent: Account<'info, AgentRegistry>,
     pub authority: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct StartBidding<'info> {
+    #[account(mut, has_one = requester)]
+    pub job: Account<'info, Job>,
+    pub requester: Signer<'info>,
 }
 
 #[derive(Accounts)]
